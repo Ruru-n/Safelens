@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <title>Report a Problem - SafeLens</title>
+
+
+   <link href="https://fonts.googleapis.com/css2?family=Afacad:wght@500&family=Inter:wght@400;500&display=swap"
+       rel="stylesheet">
+   <script src="https://cdn.tailwindcss.com"></script>
+
+
+   <script>
+       tailwind.config = {
+           theme: {
+               extend: {
+                   fontFamily: {
+                       afacad: ['Afacad', 'sans-serif'],
+                       inter: ['Inter', 'sans-serif'],
+                   },
+               },
+           },
+       }
+   </script>
+</head>
+
+
+<body class="bg-[#f6f9ff] font-inter">
+   <div class="container mx-auto px-4 py-6 max-w-4xl">
+
+
+       <!-- Header -->
+       <div class="flex items-center gap-4 mb-8">
+           <img src="https://c.animaapp.com/mjnxy2qtpi3fo5/img/vector.svg" class="w-5 cursor-pointer"
+               id="backBtnTop" />
+
+
+           <h1 class="font-afacad text-2xl md:text-3xl font-medium text-[#171616]">
+               Report a problem
+           </h1>
+       </div>
+
+
+       <!-- Card -->
+       <div class="bg-white rounded-xl shadow-lg p-6">
+
+
+           <!-- Reason -->
+           <div class="mb-8">
+               <div class="flex items-center gap-2 mb-4">
+                   <h2 class="text-xl md:text-2xl font-medium">Reason for reporting?</h2>
+                   <img src="https://c.animaapp.com/mjnxy2qtpi3fo5/img/info.svg" class="w-5 h-5">
+               </div>
+
+
+               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                   <button class="reason-btn">Functionality Issue</button>
+                   <button class="reason-btn">Performance Issue</button>
+                   <button class="reason-btn active">Security Issue</button>
+                   <button class="reason-btn">Data / Content Issue</button>
+                   <button class="reason-btn">Crash / Error Issue</button>
+                   <button class="reason-btn">Fake Content</button>
+                   <button class="reason-btn">Usability / UX Issue</button>
+                   <button class="reason-btn">Others</button>
+               </div>
+           </div>
+
+
+           <!-- Description -->
+           <div class="mb-8">
+               <h2 class="text-xl md:text-2xl font-medium mb-1">
+                   Can you provide clarity on the issue?
+               </h2>
+               <p class="text-sm md:text-base text-gray-400 mb-3">
+                   Provide a brief but clear description of the issue to help us identify the cause.
+               </p>
+
+
+               <textarea
+                   class="w-full min-h-[120px] border border-black rounded-md px-4 py-2 text-sm md:text-base resize-y"
+                   placeholder="Describe the issue here..."></textarea>
+           </div>
+
+
+           <!-- Attach -->
+           <div class="mb-10">
+               <h2 class="text-xl md:text-2xl font-medium mb-1">Attach files</h2>
+               <p class="text-sm md:text-base text-gray-400 mb-3">
+                   Attach screenshots, screen recordings, or other relevant files.
+               </p>
+
+
+               <label class="inline-flex items-center gap-3 border border-black rounded-md px-4 py-2 cursor-pointer">
+                   <img src="https://c.animaapp.com/mjnxy2qtpi3fo5/img/streamline-sharp-new-file.svg" class="w-6">
+                   <span class="text-sm md:text-base font-medium">Choose a file</span>
+                   <input type="file" class="hidden" multiple>
+               </label>
+           </div>
+
+
+           <!-- Preview Container -->
+           <div id="filePreview" class="mt-1 flex flex-wrap gap-1"></div>
+
+
+
+
+           <!-- Buttons -->
+           <div class="flex justify-end gap-3">
+               <button id="cancelBtn" class="h-10 px-6 border border-[#125491] rounded-md text-sm md:text-base">
+                   Cancel
+               </button>
+
+
+               <button id="submitBtn"
+                   class="h-10 px-6 rounded-md text-sm md:text-base text-white bg-gradient-to-b from-[#145da0] to-[#07223a]">
+                   Submit
+               </button>
+
+
+
+
+           </div>
+
+
+       </div>
+   </div>
+
+
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+   <script>
+       // === REASON BUTTONS ===
+       const buttons = document.querySelectorAll('.reason-btn');
+       buttons.forEach(btn => {
+           btn.addEventListener('click', () => {
+               buttons.forEach(b => b.classList.remove('active'));
+               btn.classList.add('active');
+           });
+       });
+
+
+       // === BACK BUTTON (TOP ICON) ===
+       document.getElementById('backBtnTop').addEventListener('click', () => {
+           window.history.back();
+       });
+
+
+       // === CANCEL BUTTON ===
+       document.getElementById('cancelBtn').addEventListener('click', () => {
+           window.history.back();
+       });
+
+
+       // === SUBMIT BUTTON ===
+       document.getElementById('submitBtn').addEventListener('click', () => {
+           Swal.fire({
+               icon: 'success',
+               title: 'Submitted Successfully!',
+               text: 'Thank you for reporting the issue. We’ll review it shortly.',
+               confirmButtonText: 'OK',
+               confirmButtonColor: '#145da0'
+           }).then(() => {
+               window.history.back();
+           });
+       });
+   </script>
+
+
+   <script>
+       const fileInput = document.querySelector('input[type="file"]');
+       const filePreview = document.getElementById('filePreview');
+
+
+       fileInput.addEventListener('change', () => {
+           filePreview.innerHTML = ''; // Clear previous previews
+
+
+           Array.from(fileInput.files).forEach(file => {
+               const fileType = file.type;
+
+
+               if (fileType.startsWith('image/')) {
+                   // If image, show a thumbnail
+                   const img = document.createElement('img');
+                   img.src = URL.createObjectURL(file);
+                   img.className = 'w-24 h-24 object-cover rounded-md';
+                   img.alt = file.name;
+                   filePreview.appendChild(img);
+               } else {
+                   // For non-images, show a simple file name box
+                   const div = document.createElement('div');
+                   div.className = 'border px-2 py-1 rounded-md bg-gray-100 text-sm';
+                   div.textContent = file.name;
+                   filePreview.appendChild(div);
+               }
+           });
+       });
+   </script>
+
+
+
+
+
+
+   <style>
+       .reason-btn {
+           border: 2px solid #000;
+           border-radius: 6px;
+           padding: 0.75rem;
+           font-size: 0.95rem;
+           font-weight: 500;
+           background: #ffffff;
+           cursor: pointer;
+           transition: all 0.2s ease;
+       }
+
+
+       .reason-btn:hover {
+           background: #f1f5f9;
+       }
+
+
+       .reason-btn.active {
+           background: linear-gradient(180deg, #145da0, #07223a);
+           color: #ffffff;
+           border-color: transparent;
+           box-shadow: 0 4px 10px rgba(20, 93, 160, 0.35);
+       }
+   </style>
+
+
+</body>
+
+
+</html>
+

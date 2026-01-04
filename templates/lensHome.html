@@ -1,0 +1,979 @@
+<!doctype html>
+<html lang="en">
+
+
+<head>
+   <meta charset="utf-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1" />
+   <title>SafeLens - Pangasinan</title>
+
+
+   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+
+
+
+   <style>
+       :root {
+           --bg: #f5f8fb;
+           --card: #ffffff;
+           --accent: #0e4380;
+           --soft: #eaf2fb;
+           --shadow: 0 6px 14px rgba(13, 30, 60, 0.08);
+       }
+
+
+       * {
+           box-sizing: border-box;
+       }
+
+
+       body {
+           margin: 0;
+           font-family: 'Poppins', Arial, sans-serif;
+           background: var(--bg);
+           color: #222;
+       }
+
+
+       /* Topbar */
+       .topbar {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: 18px 36px;
+           background: #fff;
+           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+       }
+
+
+       .brand {
+           display: flex;
+           align-items: center;
+           gap: 12px;
+       }
+
+
+       .brand .offLogo {
+           height: 70px;
+           width: 100px;
+           margin-top: -10px;
+       }
+
+
+       .nav .nav-btn {
+           margin-left: 8px;
+           padding: 12px 35px;
+           border-radius: 6px;
+           border: none;
+           background: #fff;
+           box-shadow: 0 6px 14px rgba(13, 30, 60, 0.08);
+           cursor: pointer;
+           transition: all 0.2s;
+       }
+
+
+       .nav .nav-btn.active {
+           background: linear-gradient(to bottom, #145da0, #07223a);
+           color: #fff;
+           box-shadow: 0 6px 14px rgba(8, 52, 91, 0.35);
+       }
+
+
+       .nav .nav-btn:hover {
+           transform: translateY(-1px);
+           box-shadow: 0 8px 18px rgba(13, 56, 95, 0.25);
+       }
+
+
+       /* Main container */
+       .container {
+           display: flex;
+           gap: 28px;
+           padding: 0 44px;
+           margin-top: 30px;
+       }
+
+
+       /* Left card (map) */
+       .left-card {
+           background: var(--card);
+           padding: 20px;
+           border-radius: 14px;
+           width: 68%;
+           height: 590px;
+           box-shadow: var(--shadow);
+       }
+
+
+       .map-header {
+           display: flex;
+           align-items: center;
+           justify-content: space-between;
+       }
+
+
+       .map-header .sub {
+           font-size: 15px;
+           font-weight: 600;
+           color: black;
+           margin: 0;
+       }
+
+
+       .cta {
+           background: linear-gradient(to bottom, rgba(20, 93, 160, 1), rgba(7, 34, 58, 1));
+           color: #fff;
+           padding: 10px 40px;
+           border-radius: 10px;
+           border: none;
+           margin-top: -3px;
+       }
+
+
+       .map {
+           margin-top: 12px;
+           height: 498px;
+           width: 100%;
+           background: #d9e6f5;
+           border-radius: 10px;
+           border: 1px solid rgba(0, 0, 0, 0.1);
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           position: relative;
+       }
+
+
+       .select-year {
+           font-weight: bold;
+       }
+
+
+       .year-dropdown {
+           margin-left: -130px;
+           font-weight: 500;
+           background-color: rgb(13, 56, 95);
+           color: white;
+           border-radius: 5px;
+           padding: 3px 5px;
+       }
+
+
+       .placeholder {
+           color: #555;
+           font-size: 20px;
+           opacity: 0.7;
+       }
+
+
+       /* Legend */
+       .legend {
+           position: absolute;
+           bottom: 12px;
+           left: 12px;
+           background: rgba(255, 255, 255, 0.5);
+           padding: 10px 14px;
+           border-radius: 8px;
+           font-size: 14px;
+           display: flex;
+           flex-direction: column;
+           gap: 6px;
+       }
+
+
+       .legend h4 {
+           margin: 0;
+           font-size: 14px;
+       }
+
+
+       .legend ul {
+           margin: 0;
+           padding-left: 0;
+           list-style: none;
+       }
+
+
+       .legend li {
+           display: flex;
+           align-items: center;
+           gap: 6px;
+           margin: 2px 0;
+       }
+
+
+       .dot {
+           width: 14px;
+           height: 14px;
+           border-radius: 50%;
+       }
+
+
+       .dot.high {
+           background: #e74c3c;
+       }
+
+
+       .dot.med {
+           background: #f1c40f;
+       }
+
+
+       .dot.low {
+           background: #2ecc71;
+       }
+
+
+       /* Summary */
+       .summary {
+           width: 28%;
+       }
+
+
+       .summary h2 {
+           font-size: 32px;
+           margin: 15px 0 10px 0;
+       }
+
+
+       .cards-grid {
+           display: grid;
+           grid-template-columns: repeat(2, 1fr);
+           gap: 14px;
+       }
+
+
+       /* Cards */
+       .card {
+           display: flex;
+           flex-direction: column;
+           /* stack elements vertically */
+           align-items: center;
+           /* center horizontally */
+           justify-content: flex-start;
+           /* start from top, spacing adjustable per element */
+           padding: 12px 16px;
+           border-radius: 12px;
+           background: var(--card);
+           box-shadow: var(--shadow);
+           text-align: center;
+           width: 100%;
+           height: 170px;
+           /* can be adjusted per card if needed */
+       }
+
+
+       /* All card images */
+       .card img {
+           width: 40px;
+           /* default size, can adjust per card */
+           height: 40px;
+           object-fit: cover;
+           border-radius: 50%;
+           margin-top: 7px;
+           /* adjustable top */
+           margin-bottom: 8px;
+           /* adjustable bottom */
+       }
+
+
+       .card .top-municipality {
+           font-size: 24px;
+           font-weight: 600;
+           margin-top: -5px;
+           ;
+           /* adjustable top */
+           margin-bottom: 4px;
+           /* adjustable bottom */
+       }
+
+
+       .municipality-icon {
+           width: 35px;
+           height: 35px;
+           object-fit: cover;
+           border-radius: 50%;
+       }
+
+
+       .card.month-card .month-icon {
+           width: 60px;
+           /* desired width */
+           height: 60px;
+           /* desired height */
+           margin-top: -27px;
+           margin-bottom: 6px;
+           object-fit: cover;
+           border-radius: 50%;
+           position: static;
+           /* optional */
+           top: 0;
+           /* reset */
+       }
+
+
+
+
+       .card .municipality-cases,
+       .card .crime-cases,
+       .card .peak-month-cases,
+       .card .total-cases-number {
+           font-size: 20px;
+           font-weight: 100;
+           color: red;
+           margin-top: 0;
+           /* adjustable top */
+           margin-bottom: 4px;
+           /* adjustable bottom */
+       }
+
+
+       .card .municipality-desc,
+       .card .crime-desc,
+       .card .month-desc {
+           font-size: 16px;
+           font-weight: bold;
+           color: black;
+           margin-top: 0;
+           /* adjustable top */
+           margin-bottom: 0;
+           /* adjustable bottom */
+       }
+
+
+
+
+
+
+       /* Crime Card */
+       .municipality-header,
+       .crime-card .crime-header {
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           /* center all items horizontally */
+           gap: 4px;
+           /* vertical gap adjustable */
+       }
+
+
+       .crime-card .crime-header h3 {
+           font-size: 26px;
+           font-weight: 600;
+           margin: 0;
+           text-align: center;
+       }
+
+
+       /* Month card */
+       .month-card,
+       .total-card {
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           justify-content: center;
+           position: relative;
+       }
+
+
+       /* Safety tip card */
+       .safety-tip-card {
+           margin-top: 18px;
+           background: var(--card);
+           padding: 18px 20px;
+           border-radius: 14px;
+           box-shadow: var(--shadow);
+           width: 100%;
+           display: flex;
+           flex-direction: row;
+           gap: 12px;
+           align-items: flex-start;
+           /* changed from center */
+           height: 165px;
+           /* let the height adjust based on image/text */
+           box-sizing: border-box;
+       }
+
+
+       .safety-tip-card h3 {
+           font-size: 18px;
+           margin: 0;
+           font-weight: 600;
+           color: #0e4380;
+       }
+
+
+       .safety-tip-card p {
+           font-size: 14px;
+           margin: 0;
+           color: #333;
+           line-height: 1.4;
+       }
+
+
+       /* Footer */
+       .footer {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: 20px 40px;
+           background: linear-gradient(to bottom, #145da0, #07223a);
+           color: white;
+           font-size: 14px;
+           border-top: 1px solid rgba(255, 255, 255, 0.1);
+           width: 100%;
+           box-sizing: border-box;
+           margin-top: 30px;
+       }
+
+
+       .footer .leftFooter {
+           text-align: left;
+       }
+
+
+       .footer .rightFooter {
+           text-align: right;
+       }
+
+
+       .highest-muni {
+           font-size: 20px;
+           color: red;
+           margin-top: 0px;
+       }
+
+
+       .most-rate {
+           margin-top: -15px;
+           font-weight: 600;
+       }
+
+
+       .highest-month {
+           margin-bottom: -10px;
+           font-size: 24px;
+           margin-top: -15px;
+       }
+
+
+       .month-cases {
+           margin-top: 15px;
+           margin-bottom: 5px;
+           font-size: 20px;
+           color: red;
+           font-weight: 300;
+       }
+
+
+       .card.month-card .month-desc {
+           margin-top: 0px;
+           /* push down */
+           margin-bottom: -8px;
+       }
+
+
+       .total-case {
+           margin-bottom: -10px;
+           font-size: 24px;
+           margin-top: 15px;
+       }
+
+
+       .total-card .total-icon {
+           width: 35px !important;
+           height: 35px !important;
+           position: absolute;
+           top: 19px;
+           left: 50%;
+           transform: translateX(-50%);
+       }
+
+
+       .red-cases {
+           margin-top: 15px;
+           margin-bottom: 5px;
+           font-size: 20px;
+           color: red;
+           font-weight: 300;
+       }
+
+
+       .police-img {
+           width: auto;
+           /* maintain aspect ratio */
+           max-height: 135px;
+           /* adjust as needed */
+           object-fit: contain;
+           /* make sure whole image fits */
+           border-radius: 10px;
+           /* optional, for nicer corners */
+       }
+
+
+       .safety-tip-text h3 {
+           margin-top: 33px;
+           margin-left: -7px;
+       }
+
+
+       #daily-tip {
+           margin-left: -7px;
+       }
+
+
+       /* Profile Card Dropdown */
+       .profile-card {
+           display: none;
+           position: absolute;
+           right: 0;
+           top: 50px;
+           width: 290px;
+           /* 🔼 wider */
+           padding: 14px;
+           /* 🔼 more breathing room */
+           background-color: #fff;
+           box-shadow: 0 10px 22px rgba(13, 30, 60, 0.25);
+           border-radius: 12px;
+           z-index: 1000;
+           font-family: 'Poppins', Arial, sans-serif;
+       }
+
+
+
+
+       .profile-card.show {
+           display: block;
+       }
+
+
+       .profile-card .profile-info {
+           display: flex;
+           align-items: center;
+           gap: 10px;
+           margin-bottom: 10px;
+       }
+
+
+       .profile-card .profile-pic {
+           width: 40px;
+           height: 40px;
+           border-radius: 50%;
+           object-fit: cover;
+       }
+
+
+       .profile-card .profile-name {
+           font-weight: 600;
+           font-size: 14px;
+       }
+
+
+       .profile-card .section-title {
+           font-size: 12px;
+           font-weight: 600;
+           color: #555;
+           margin-top: 10px;
+           margin-bottom: 4px;
+           padding-left: 5px;
+           text-transform: uppercase;
+       }
+
+
+       .profile-card a {
+           display: block;
+           padding: 6px 10px 6px 20px;
+           /* indent links under section */
+           text-decoration: none;
+           color: #222;
+           border-radius: 6px;
+           transition: background 0.2s;
+           font-size: 13px;
+       }
+
+
+       .profile-card .profile-muni {
+           font-size: 13px;
+           /* readable size */
+           color: black;
+           /* gray text */
+           display: block;
+           /* important para lumabas sa next line */
+           margin-top: 2px;
+           /* konting spacing mula sa name */
+       }
+
+
+
+
+       .profile-card a:hover {
+           background-color: #f1f1f1;
+       }
+
+
+       /* Profile button hover effect only */
+       #profileBtn:hover {
+           transform: scale(1.05);
+           box-shadow: 0 8px 18px rgba(13, 56, 95, 0.25);
+       }
+
+
+       /* Smooth animation */
+       #profileBtn {
+           transition: all 0.2s ease;
+       }
+   </style>
+</head>
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% for category, message in messages %}
+<div class="flash-data" data-category="{{ category }}" data-message="{{ message }}">
+</div>
+{% endfor %}
+{% endwith %}
+
+
+
+
+<body>
+   <header class="topbar">
+       <div class="brand">
+           <img src="{{ url_for('static', filename='offLogo.png') }}" alt="SafeLens" class="offLogo" />
+       </div>
+       <nav class="nav">
+           <button class="nav-btn {% if active_page == 'home' %}active{% endif %}"
+               onclick="location.href='/lensHome'">Home</button>
+           <button class="nav-btn {% if active_page == 'analytics' %}active{% endif %}"
+               onclick="location.href='/lensAnalytics'">Analytics</button>
+           <button class="nav-btn {% if active_page == 'map' %}active{% endif %}"
+               onclick="location.href='/userMap'">Map</button>
+           <button class="nav-btn {% if active_page == 'hotlines' %}active{% endif %}"
+               onclick="location.href='/hotlines'">Hotlines</button>
+           <button class="nav-btn {% if active_page == 'tips' %}active{% endif %}"
+               onclick="location.href='/safetyTips'">Safety Tips</button>
+
+
+
+
+           <div class="profile-wrapper" style="position: relative; display: inline-block;">
+               <!-- Existing Profile Button -->
+               <button id="profileBtn"
+                   class="nav-btn {% if active_page == 'profile' %}active{% endif %}">Profile</button>
+
+
+               <!-- Profile Card Dropdown -->
+               <div id="profileCard" class="profile-card">
+                   <div class="profile-info">
+                       <img src="{{ url_for('static', filename='user-icon.jpg') }}" alt="User" class="profile-pic">
+                       <div>
+                           <p class="profile-name">{{ session.get('email', 'User').split('@')[0] }}</p>
+                           <span class="profile-muni" style="font-size:12px;color:#555;">{{ session.get('municipality')
+                               }}, Pangasinan</span>
+                       </div>
+                   </div>
+
+
+                   <hr>
+                   <!-- Account Section -->
+                   <p class="section-title">Account</p>
+                   <a href="#">Edit Profile</a>
+                   <a href="{{ url_for('security') }}">Security</a>
+
+
+                   <!-- Support & About Section -->
+                   <p class="section-title">Support & About</p>
+                   <a href="#">Help & Support</a>
+                   <a href="#">Terms & Policies</a>
+
+
+                   <!-- Actions Section -->
+                   <p class="section-title">Actions</p>
+                   <a href="{{ url_for('reportProblem') }}">Report a Problem</a>
+                   <a href="#" id="logoutBtn" style="color:red;">Logout</a>
+
+
+               </div>
+
+
+       </nav>
+   </header>
+
+
+
+
+   <main class="container">
+       <section class="left-card">
+           <div class="map-header">
+
+
+               <label for="yearSelect" class="select-year">Select Year:</label>
+               <select id="yearSelect" class="year-dropdown" onchange="changeYear()">
+                   <option value="2025" {% if year=='2025' %}selected{% endif %}>2025</option>
+                   <option value="2024" {% if year=='2024' %}selected{% endif %}>2024</option>
+                   <option value="2023" {% if year=='2023' %}selected{% endif %}>2023</option>
+                   <option value="2022" {% if year=='2022' %}selected{% endif %}>2022</option>
+                   <option value="2021" {% if year=='2021' %}selected{% endif %}>2021</option>
+                   <option value="2020" {% if year=='2020' %}selected{% endif %}>2020</option>
+               </select>
+               <p class="sub">Explore crime hotspots across Pangasinan.</p>
+               <button class="cta">View Map</button>
+           </div>
+
+
+           <div id="map" class="map">
+               <p class="placeholder">MAP PREVIEW HERE</p>
+
+
+               <div class="legend">
+                   <h4>Heat Map Legend</h4>
+                   <ul>
+                       <li><span class="dot high"></span>High crime rate areas</li>
+                       <li><span class="dot med"></span>Moderate crime rate areas</li>
+                       <li><span class="dot low"></span>Low crime rate areas</li>
+                   </ul>
+               </div>
+           </div>
+
+
+       </section>
+
+
+       <aside class="summary">
+           <h2>Summary</h2>
+
+
+           <div class="cards-grid">
+
+
+               <!--Municipality Card-->
+               <div class="card municipality-card">
+                   <img src="{{ url_for('static', filename='dagupan.png') }}" class="municipality-icon">
+                   <div class="municipality-header">
+                       <h3 id="municipality-name" class="top-municipality">{{ municipality_data[0] }}</h3>
+                   </div>
+                   <p class="highest-muni" id="municipality-cases"> {{ municipality_data[1] }} Cases</p>
+                   <p class="most-rate" id="municipality-desc">Most Crime Rate</p>
+               </div>
+
+
+               <!--Crime Card-->
+               <div class="card crime-card">
+                   <img src="{{ url_for('static', filename='posas.png') }}" class="municipality-icon">
+                   <div class="municipality-header">
+                       <h3 id="crime-type" class="top-municipality">{{ crime_data[0] }}</h3>
+                   </div>
+                   <p id="crime-cases" class="municipality-cases">{{ crime_data[1] }} Cases</p>
+                   <p class="municipality-desc">Most Crime Type</p>
+               </div>
+
+
+               <!--Month Card-->
+               <div class="card month-card">
+                   <img src="{{ url_for('static', filename='month.png') }}" class="month-icon">
+                   <div class="municipality-header">
+                       <h3 id="peak-month" class="highest-month">{{ month_name }}</h3>
+                   </div>
+                   <p id="peak-month-cases" class="month-cases">{{ month_cases }} Cases</p>
+                   <p class="month-desc">Peak Month in {{ year }}</p>
+               </div>
+
+
+               <!--Total Cases-->
+               <div class="card total-card">
+                   <img src="{{ url_for('static', filename='total.png') }}" class="total-icon">
+
+
+                   <div class="municipality-header">
+                       <h3 class="total-case">Total Cases</h3>
+                   </div>
+
+
+                   <p id="total-cases-number" class="red-cases">{{ total_cases }} Cases</p>
+               </div>
+           </div>
+
+
+           <!-- SAFETY TIP CARD -->
+           <div class="safety-tip-card">
+               <img class="police-img" src="{{url_for('static', filename='police.png')}}" alt="Police">
+               <div class="safety-tip-text">
+                   <h3>Safety Tip for the Day</h3>
+                   <p id="daily-tip">Avoid walking alone in poorly lit areas at night. Stay alert.</p>
+               </div>
+           </div>
+
+
+       </aside>
+   </main>
+
+
+   <!-- FOOTER -->
+   <footer class="footer">
+       <div class="leftFooter">
+           © 2025 SafeLens, All Rights Reserved | Last Updated: November 18, 2025
+       </div>
+   </footer>
+
+
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+
+
+   <script>
+       function changeYear() {
+           const year = document.getElementById('yearSelect').value;
+
+
+           fetch(`/lensHomeData?year=${year}`)
+               .then(response => response.json())
+               .then(data => {
+                   // Update summary cards
+                   document.getElementById('municipality-name').textContent = data.municipality.name || "-";
+                   document.getElementById('municipality-cases').textContent = data.municipality.cases + " Cases";
+
+
+                   document.getElementById('crime-type').textContent = data.crime.type || "-";
+                   document.getElementById('crime-cases').textContent = data.crime.cases + " Cases";
+
+
+                   document.getElementById('peak-month').textContent = data.peak_month.name || "-";
+                   document.getElementById('peak-month-cases').textContent = data.peak_month.cases + " Cases";
+
+
+                   document.getElementById('total-cases-number').textContent = data.total_cases + " Cases";
+               });
+       }
+
+
+       //profile button
+
+
+       document.addEventListener("DOMContentLoaded", function () {
+           const profileBtn = document.getElementById("profileBtn");
+           const profileCard = document.getElementById("profileCard");
+
+
+           // Populate profile info dynamically
+           const userData = {
+               username: "{{ session.get('email', 'User') }}",
+               municipality: "{{ session.get('municipality', '') }}",
+               profilePic: "{{ url_for('static', filename='user-icon.jpg') }}"
+           };
+
+
+           // Toggle profile card visibility
+           profileBtn.addEventListener("click", function (e) {
+               e.stopPropagation();
+               profileCard.classList.toggle("show");
+           });
+
+
+           // Hide card if clicked outside
+           document.addEventListener("click", function () {
+               profileCard.classList.remove("show");
+           });
+
+
+           // Prevent hiding when clicking inside the card
+           profileCard.addEventListener("click", function (e) {
+               e.stopPropagation();
+           });
+       });
+
+
+       (function () {
+           if (window.history && window.history.pushState) {
+               // Push initial state
+               window.history.pushState({ noBackExitsApp: true }, '');
+
+
+               window.addEventListener('popstate', function (event) {
+                   if (event.state && event.state.noBackExitsApp) {
+                       // Redirect to login page only on back after logout
+                       window.location.replace("{{ url_for('login') }}");
+                   }
+               });
+           }
+       })();
+
+
+       window.addEventListener('pageshow', function (event) {
+           if (event.persisted) {
+               // Forces reload if page is from back/forward cache
+               window.location.reload();
+           }
+       });
+
+
+
+
+   </script>
+
+
+   <script>
+       document.addEventListener('DOMContentLoaded', function () {
+
+
+           const flashItems = document.querySelectorAll('.flash-data');
+
+
+           flashItems.forEach(item => {
+               const category = item.dataset.category;
+               const message = item.dataset.message;
+
+
+               Swal.fire({
+                   icon: category === 'success' ? 'success' : 'error',
+                   title: message,
+                   confirmButtonColor: '#145da0'
+               });
+
+
+               item.remove(); // linisin DOM
+           });
+
+
+       });
+   </script>
+
+
+   <script>
+       document.addEventListener("DOMContentLoaded", function () {
+           const logoutBtn = document.getElementById("logoutBtn");
+
+
+           logoutBtn.addEventListener("click", function (e) {
+               e.preventDefault();
+
+
+               Swal.fire({
+                   text: "Are you sure you want to log",
+                   icon: "warning",
+                   showCancelButton: true,
+                   confirmButtonText: "Yes, Logout",
+                   cancelButtonText: "Cancel",
+                   confirmButtonColor: "#d33",
+                   cancelButtonColor: "#6c757d",
+                   reverseButtons: true
+               }).then((result) => {
+                   if (result.isConfirmed) {
+                       window.location.href = "{{ url_for('logout') }}";
+                   }
+               });
+           });
+       });
+   </script>
+
+
+
+
+
+
+</body>
+
+
+</html>
+

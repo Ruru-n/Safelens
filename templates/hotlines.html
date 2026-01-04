@@ -1,0 +1,972 @@
+Try AI directly in your favorite apps … Use Gemini to generate drafts and refine content, plus get Gemini Pro with access to Google's next-gen AI for ₱1,100 ₱360 for 3 months
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SafeLens - Emergency Hotlines</title>
+
+  <style>
+    @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+    @import url("https://fonts.googleapis.com/css?family=Inter:400,600|Afacad:400,500,600,700|Poppins:400,500,600");
+
+    :root {
+      --bg: #f5f8fb;
+      --card: #ffffff;
+      --accent: #145da0;
+      --shadow: 0 6px 14px rgba(13, 30, 60, 0.08);
+      --brandingdark-gray: rgba(118,118,118,1);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Poppins', Arial, sans-serif;
+      background: var(--bg);
+      color: #222;
+    }
+
+    /* ================= TOPBAR ================= */
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 18px 36px;
+      background: #fff;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .brand { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px;
+    }
+    
+    .offLogo { 
+      height: 70px; 
+      width: 100px; 
+      margin-top: -10px; 
+    }
+
+    .nav { 
+      display: flex; 
+      align-items: center; 
+    }
+    
+    .nav .nav-btn {
+      margin-left: 8px;
+      padding: 12px 35px;
+      border-radius: 6px;
+      border: none;
+      background: #fff;
+      box-shadow: var(--shadow);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 16px;
+      font-weight: 500;
+    }
+
+    .nav .nav-btn.active {
+      background: linear-gradient(to bottom, #145da0, #07223a);
+      color: #fff;
+      box-shadow: 0 6px 14px rgba(8, 52, 91, 0.35);
+    }
+    
+    .nav .nav-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 18px rgba(13, 56, 95, 0.25);
+    }
+
+    /* Profile Card Dropdown (same as home page) */
+    .profile-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .profile-card {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 50px;
+      width: 290px;
+      padding: 14px;
+      background-color: #fff;
+      box-shadow: 0 10px 22px rgba(13, 30, 60, 0.25);
+      border-radius: 12px;
+      z-index: 1000;
+      font-family: 'Poppins', Arial, sans-serif;
+    }
+
+    .profile-card.show {
+      display: block;
+    }
+
+    .profile-card .profile-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .profile-card .profile-pic {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .profile-card .profile-name {
+      font-weight: 600;
+      font-size: 14px;
+    }
+
+    .profile-card .profile-muni {
+      font-size: 13px;
+      color: #555;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .profile-card .section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #555;
+      margin-top: 10px;
+      margin-bottom: 4px;
+      padding-left: 5px;
+      text-transform: uppercase;
+    }
+
+    .profile-card a {
+      display: block;
+      padding: 6px 10px 6px 20px;
+      text-decoration: none;
+      color: #222;
+      border-radius: 6px;
+      transition: background 0.2s;
+      font-size: 13px;
+    }
+
+    .profile-card a:hover {
+      background-color: #f1f1f1;
+    }
+
+    /* ================= CONTENT ================= */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 40px 36px;
+    }
+
+    .page-title {
+      font-family: 'Afacad';
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .page-subtitle {
+      font-family: 'Afacad';
+      font-size: 1.5rem;
+      color: var(--brandingdark-gray);
+    }
+    
+    /* ================= HOTLINES HEADER PANEL ================= */
+    .hotlines-header {
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 8px 20px rgba(13, 30, 60, 0.12);
+      padding: 30px 36px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 50px;
+    }
+
+    .header-left {
+      max-width: 60%;
+    }
+
+    .header-right {
+      width: 380px;
+    }
+
+    /* SEARCH BAR INSIDE HEADER */
+    .header-right input {
+      width: 100%;
+      padding: 16px 20px;
+      font-family: 'Poppins', Arial, sans-serif;
+      font-size: 16px;
+      border-radius: 10px;
+      border: 2px solid #e3e7ee;
+      outline: none;
+      background: #fff;
+      box-shadow: 0 6px 14px rgba(13, 30, 60, 0.08);
+      transition: all 0.25s ease;
+    }
+
+    .header-right input::placeholder {
+      color: #9aa4b2;
+    }
+
+    .header-right input:focus {
+      border-color: #145da0;
+      box-shadow: 0 8px 20px rgba(20, 93, 160, 0.25);
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .hotlines-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
+      }
+
+      .header-left {
+        max-width: 100%;
+      }
+
+      .header-right {
+        width: 100%;
+      }
+    }
+    
+    .hotlines-header {
+      margin-top: 40px;
+    }
+
+    /* ================= CONTENT WRAPPER ================= */
+    .content-wrapper {
+      display: flex;
+      gap: 60px;
+    }
+
+    .favorites-section { flex: 1; }
+    .municipalities-section { flex: 2; }
+
+    .section-title {
+      font-family: 'Afacad';
+      font-size: 2.3rem;
+      margin-bottom: 30px;
+    }
+    
+
+    /* ================= HOTLINE CARD ================= */
+    .hotline-card {
+      background: #fff;
+      border-radius: 11px;
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.1);
+      padding: 25px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      transition: transform 0.2s ease;
+    }
+
+    .hotline-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .hotline-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #e3e7ee;
+    }
+
+    .hotline-name {
+      font-family: 'Afacad';
+      font-size: 1.5rem;
+    }
+
+    .hotline-number {
+      font-family: 'Afacad';
+      font-size: 1.25rem;
+      color: #818181;
+    }
+
+    .favorite-btn {
+      margin-left: auto;
+      background: #fff;
+      border: 2px solid var(--accent);
+      color: var(--accent);
+      padding: 10px 24px;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+      min-width: 150px;
+    }
+
+    .favorite-btn:hover {
+      background: #f0f7ff;
+    }
+
+    .favorite-btn.active {
+      background: linear-gradient(to bottom, #145da0, #07223a);
+      color: #fff;
+      border-color: #07223a;
+    }
+
+    .favorite-btn.active:hover {
+      background: linear-gradient(to bottom, #1a6bb8, #0a2c4a);
+    }
+
+    .no-favorites {
+      text-align: center;
+      padding: 40px;
+      color: #9aa4b2;
+      font-style: italic;
+    }
+
+    @media (max-width: 1024px) {
+      .content-wrapper { flex-direction: column; }
+    }
+  </style>
+</head>
+
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <img src="offLogo.png" class="offLogo" alt="SafeLens Logo">
+  </div>
+  <nav class="nav">
+    <button class="nav-btn" onclick="location.href='/lensHome'">Home</button>
+    <button class="nav-btn" onclick="location.href='/lensAnalytics'">Analytics</button>
+    <button class="nav-btn" onclick="location.href='/userMap'">Map</button>
+    <button class="nav-btn active">Hotlines</button>
+    <button class="nav-btn" onclick="location.href='/safetyTips'">Safety Tips</button>
+
+    <!-- Profile Button & Dropdown -->
+    <div class="profile-wrapper">
+      <button id="profileBtn" class="nav-btn">Profile</button>
+      
+      <div id="profileCard" class="profile-card">
+        <div class="profile-info">
+          <img src="user-icon.jpg" alt="User" class="profile-pic">
+          <div>
+            <p class="profile-name">User</p>
+            <span class="profile-muni">Pangasinan</span>
+          </div>
+        </div>
+        
+        <hr>
+        
+        <!-- Account Section -->
+        <p class="section-title">Account</p>
+        <a href="#">Edit Profile</a>
+        <a href="#">Security</a>
+        
+        <!-- Support & About Section -->
+        <p class="section-title">Support & About</p>
+        <a href="#">Help & Support</a>
+        <a href="#">Terms & Policies</a>
+        
+        <!-- Actions Section -->
+        <p class="section-title">Actions</p>
+        <a href="#">Report a Problem</a>
+        <a href="#" style="color:red;">Logout</a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<main class="container">
+  <!-- HEADER PANEL -->
+  <div class="hotlines-header">
+    <div class="header-left">
+      <h1 class="page-title">Emergency Hotlines</h1>
+      <p class="page-subtitle">
+        Find and favorite police stations across Pangasinan.
+      </p>
+    </div>
+
+    <div class="header-right">
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search municipality (e.g. Urdaneta, Dagupan...)"
+      />
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT -->
+  <div class="content-wrapper">
+    <section class="favorites-section">
+      <h2 class="section-title">Favorites</h2>
+      <div id="favoritesList">
+        <div class="no-favorites" id="noFavoritesMessage">
+          No favorites yet. Click "Add to Favorites" on any municipality.
+        </div>
+      </div>
+    </section>
+
+    <section class="municipalities-section">
+      <h2 class="section-title">All Municipalities and Cities</h2>
+      <div id="municipalityList"></div>
+    </section>
+  </div>
+</main>
+
+<script>
+// Logo Manager Class - Handles logo fetching with intelligent fallbacks
+class LogoManager {
+  constructor() {
+    this.cache = new Map();
+    this.loadingPromises = new Map();
+  }
+  
+  async getLogo(municipalityName) {
+    // Check cache first
+    if (this.cache.has(municipalityName)) {
+      return this.cache.get(municipalityName);
+    }
+    
+    // Check if already loading this logo
+    if (this.loadingPromises.has(municipalityName)) {
+      return this.loadingPromises.get(municipalityName);
+    }
+    
+    // Create loading promise
+    const logoPromise = this.fetchLogo(municipalityName);
+    this.loadingPromises.set(municipalityName, logoPromise);
+    
+    try {
+      const logoUrl = await logoPromise;
+      this.cache.set(municipalityName, logoUrl);
+      return logoUrl;
+    } finally {
+      this.loadingPromises.delete(municipalityName);
+    }
+  }
+  
+  async fetchLogo(municipalityName) {
+    // Priority 1: Pre-defined known logos (from Wikipedia)
+    const knownLogo = this.getKnownOfficialLogo(municipalityName);
+    if (knownLogo) {
+      const isValid = await this.checkImageUrl(knownLogo);
+      if (isValid) {
+        return knownLogo;
+      }
+    }
+    
+    // Priority 2: Try Wikipedia naming conventions
+    const wikipediaLogo = this.getWikipediaLogoUrl(municipalityName);
+    const wikiValid = await this.checkImageUrl(wikipediaLogo);
+    if (wikiValid) {
+      return wikipediaLogo;
+    }
+    
+    // Priority 3: Generate SVG badge
+    return this.generateSVGBadge(municipalityName);
+  }
+  
+  getKnownOfficialLogo(municipalityName) {
+    const knownLogos = {
+      "Agno": "https://upload.wikimedia.org/wikipedia/commons/4/4e/Seal_of_Agno%2C_Pangasinan.png",
+      "Alaminos": "https://upload.wikimedia.org/wikipedia/commons/5/56/Seal_of_Alaminos%2C_Pangasinan.svg",
+      "Anda": "https://upload.wikimedia.org/wikipedia/commons/5/54/Seal_of_Anda%2C_Pangasinan.png",
+      "Bani": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Seal_of_Bani%2C_Pangasinan.png",
+      "Bolinao": "https://upload.wikimedia.org/wikipedia/commons/c/ca/Seal_of_Bolinao%2C_Pangasinan.png",
+      "Bugallon": "https://upload.wikimedia.org/wikipedia/commons/2/27/Seal_of_Bugallon%2C_Pangasinan.png",
+      "Burgos": "https://upload.wikimedia.org/wikipedia/commons/5/5f/Seal_of_Burgos%2C_Pangasinan.png",
+      "Calasiao": "https://upload.wikimedia.org/wikipedia/commons/2/25/Seal_of_Calasiao%2C_Pangasinan.svg",
+      "Dagupan": "https://upload.wikimedia.org/wikipedia/en/5/5d/Seal_of_Dagupan.svg",
+      "Dasol": "https://upload.wikimedia.org/wikipedia/commons/1/1d/Seal_of_Dasol%2C_Pangasinan.png",
+      "Infanta": "https://upload.wikimedia.org/wikipedia/commons/8/88/Seal_of_Infanta%2C_Pangasinan.png",
+      "Labrador": "https://upload.wikimedia.org/wikipedia/commons/a/ac/Seal_of_Labrador%2C_Pangasinan.png",
+      "Lingayen": "https://upload.wikimedia.org/wikipedia/commons/b/bc/Seal_of_Lingayen%2C_Pangasinan.svg",
+      "Mabini": "https://upload.wikimedia.org/wikipedia/commons/7/70/Seal_of_Mabini%2C_Pangasinan.png",
+      "Manaoag": "https://upload.wikimedia.org/wikipedia/commons/9/9f/Seal_of_Manaoag%2C_Pangasinan.svg",
+      "Mangaldan": "https://upload.wikimedia.org/wikipedia/commons/5/5b/Seal_of_Mangaldan%2C_Pangasinan.svg",
+      "Mangatarem": "https://upload.wikimedia.org/wikipedia/commons/e/e4/Seal_of_Mangatarem%2C_Pangasinan.png",
+      "Mapandan": "https://upload.wikimedia.org/wikipedia/commons/4/4b/Seal_of_Mapandan%2C_Pangasinan.png",
+      "Pozorrubio": "https://upload.wikimedia.org/wikipedia/commons/1/18/Seal_of_Pozorrubio%2C_Pangasinan.png",
+      "Rosales": "https://upload.wikimedia.org/wikipedia/commons/1/1a/Seal_of_Rosales%2C_Pangasinan.png",
+      "San Carlos": "https://upload.wikimedia.org/wikipedia/en/f/f1/Seal_of_San_Carlos_City%2C_Pangasinan.svg",
+      "San Fabian": "https://upload.wikimedia.org/wikipedia/commons/1/1c/Seal_of_San_Fabian%2C_Pangasinan.svg",
+      "San Jacinto": "https://upload.wikimedia.org/wikipedia/commons/6/6c/Seal_of_San_Jacinto%2C_Pangasinan.png",
+      "San Manuel": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Seal_of_San_Manuel%2C_Pangasinan.png",
+      "San Nicolas": "https://upload.wikimedia.org/wikipedia/commons/6/6a/Seal_of_San_Nicolas%2C_Pangasinan.png",
+      "San Quintin": "https://upload.wikimedia.org/wikipedia/commons/0/01/Seal_of_San_Quintin%2C_Pangasinan.png",
+      "Santa Maria": "https://upload.wikimedia.org/wikipedia/commons/a/a3/Seal_of_Santa_Maria%2C_Pangasinan.png",
+      "Sison": "https://upload.wikimedia.org/wikipedia/commons/8/8b/Seal_of_Sison%2C_Pangasinan.png",
+      "Sta Barbara": "https://upload.wikimedia.org/wikipedia/commons/c/cf/Seal_of_Sta._Barbara%2C_Pangasinan.svg",
+      "Sto Tomas": "https://upload.wikimedia.org/wikipedia/commons/b/b1/Seal_of_Sto._Tomas%2C_Pangasinan.png",
+      "Sual": "https://upload.wikimedia.org/wikipedia/commons/a/a7/Seal_of_Sual%2C_Pangasinan.png",
+      "Tayug": "https://upload.wikimedia.org/wikipedia/commons/7/76/Seal_of_Tayug%2C_Pangasinan.png",
+      "Umingan": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Seal_of_Umingan%2C_Pangasinan.png",
+      "Urbiztondo": "https://upload.wikimedia.org/wikipedia/commons/7/7d/Seal_of_Urbiztondo%2C_Pangasinan.png",
+      "Urdaneta": "https://upload.wikimedia.org/wikipedia/en/6/6c/Seal_of_Urdaneta%2C_Pangasinan.svg",
+      "Villasis": "https://upload.wikimedia.org/wikipedia/commons/5/5e/Seal_of_Villasis%2C_Pangasinan.png"
+    };
+    
+    // Handle name variations
+    const nameMap = {
+      "Sta Barbara": "Sta. Barbara",
+      "Sto Tomas": "Sto. Tomas"
+    };
+    
+    const lookupName = nameMap[municipalityName] || municipalityName;
+    return knownLogos[lookupName];
+  }
+  
+  getWikipediaLogoUrl(municipalityName) {
+    const safeName = municipalityName
+      .replace(/\s+/g, '_')
+      .replace(/\./g, '')
+      .replace(/'/g, '%27');
+    
+    return `https://upload.wikimedia.org/wikipedia/commons/thumb/0/0d/Seal_of_${safeName}%2C_Pangasinan.svg/200px-Seal_of_${safeName}%2C_Pangasinan.svg.png`;
+  }
+  
+  async checkImageUrl(url) {
+    return new Promise((resolve) => {
+      if (!url) {
+        resolve(false);
+        return;
+      }
+      
+      const img = new Image();
+      img.onload = () => resolve(true);
+      img.onerror = () => resolve(false);
+      img.src = url;
+      
+      // Timeout after 3 seconds
+      setTimeout(() => resolve(false), 3000);
+    });
+  }
+  
+  generateSVGBadge(municipalityName) {
+    // Get initials (first 2-3 letters)
+    const words = municipalityName.split(' ');
+    let initials;
+    if (words.length >= 2) {
+      initials = words[0].charAt(0) + words[1].charAt(0);
+    } else {
+      initials = municipalityName.substring(0, 2).toUpperCase();
+    }
+    
+    // Color palette for badges
+    const colors = [
+      ['#145da0', '#0e447a'], // Blue
+      ['#1a6bb8', '#0e447a'], // Light Blue
+      ['#2e8bc0', '#145da0'], // Sky Blue
+      ['#0e447a', '#07223a'], // Dark Blue
+    ];
+    
+    const colorPair = colors[municipalityName.length % colors.length];
+    
+    return `data:image/svg+xml;base64,${btoa(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+        <defs>
+          <linearGradient id="grad${municipalityName.replace(/\s+/g, '')}" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:${colorPair[0]};stop-opacity:1" />
+            <stop offset="100%" style="stop-color:${colorPair[1]};stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <circle cx="50" cy="50" r="45" fill="url(#grad${municipalityName.replace(/\s+/g, '')})"/>
+        <circle cx="50" cy="50" r="42" fill="none" stroke="white" stroke-width="1.5" opacity="0.3"/>
+        <text x="50" y="58" text-anchor="middle" fill="white" 
+              font-family="Arial, sans-serif" font-size="28" font-weight="bold"
+              style="text-shadow: 0 1px 2px rgba(0,0,0,0.2)">
+          ${initials}
+        </text>
+        <circle cx="50" cy="50" r="45" fill="none" stroke="white" stroke-width="2" opacity="0.8"/>
+      </svg>
+    `)}`;
+  }
+}
+
+// Main Application Code
+document.addEventListener("DOMContentLoaded", async () => {
+  // Initialize Logo Manager
+  const logoManager = new LogoManager();
+  
+  // Profile dropdown functionality
+  const profileBtn = document.getElementById("profileBtn");
+  const profileCard = document.getElementById("profileCard");
+
+  profileBtn.addEventListener("click", function (e) {
+    e.stopPropagation();
+    profileCard.classList.toggle("show");
+  });
+
+  document.addEventListener("click", function () {
+    profileCard.classList.remove("show");
+  });
+
+  profileCard.addEventListener("click", function (e) {
+    e.stopPropagation();
+  });
+
+  // Municipalities data
+  const municipalities = [
+    {
+      name: "Agno",
+      phone: "0915-315-7519 / 0998-598-5093",
+      logo: "logos/agno.png"
+    },
+    {
+      name: "Aguilar",
+      phone: "0998-598-5104",
+      logo: "logos/aguilar.png"
+    },
+    {
+      name: "Alaminos",
+      phone: "0998-598-5094 / 0998-598-5095",
+      logo: "logos/alaminos.png"
+    },
+    {
+      name: "Alcala",
+      phone: "0998-598-5127",
+      logo: "logos/alcala.png"
+    },
+    {
+      name: "Anda",
+      phone: "0919-313-5509 / 0998-598-5096",
+      logo: "logos/anda.png"
+    },
+    {
+      name: "Asingan",
+      phone: "0998-598-5137",
+      logo: "logos/asingan.png"
+    },
+    {
+      name: "Balungao",
+      phone: "0956-562-3342",
+      logo: "logos/balungao.png"
+    },
+    {
+      name: "Bani",
+      phone: "0906-264-6909 / 0998-598-5097",
+      logo: "logos/bani.png"
+    },
+    {
+      name: "Basista",
+      phone: "0998-263-4083 / 0998-598-5105",
+      logo: "logos/basista.png"
+    },
+    {
+      name: "Bautista",
+      phone: "0998-598-5128 / 0915-749-1125",
+      logo: "logos/bautista.png"
+    },
+    {
+      name: "Bayambang",
+      phone: "0970-578-6582 / 0970-578-6566",
+      logo: "logos/bayambang.png"
+    },
+    {
+      name: "Binalonan",
+      phone: "0998-598-5129 / 0906-440-5387",
+      logo: "logos/binalonan.png"
+    },
+    {
+      name: "Binmaley",
+      phone: "0949-940-0713",
+      logo: "logos/binmaley.png"
+    },
+    {
+      name: "Bolinao",
+      phone: "0998-598-5098",
+      logo: "logos/bolinao.png"
+    },
+    {
+      name: "Bugallon",
+      phone: "0998-598-5107 / 0927-310-5875",
+      logo: "logos/bugallon.png"
+    },
+    {
+      name: "Burgos",
+      phone: "0998-598-5099",
+      logo: "logos/burgos.png"
+    },
+    {
+      name: "Calasiao",
+      phone: "0917-769-5306 / 0998-598-5114",
+      logo: "logos/calasiao.png"
+    },
+    {
+      name: "Dagupan",
+      phone: "0916-525-6802 / 0933-502-4899",
+      logo: "logos/dagupan.png"
+    },
+    {
+      name: "Dasol",
+      phone: "0998-598-5100 / 0998-431-3113",
+      logo: "logos/dasol.png"
+    },
+    {
+      name: "Infanta",
+      phone: "0998-598-5101",
+      logo: "logos/infanta.png"
+    },
+    {
+      name: "Labrador",
+      phone: "0916-536-9865 / 0998-598-5108",
+      logo: "logos/labrador.png"
+    },
+    {
+      name: "Laoac",
+      phone: "0917-980-1821 / 0998-598-5130",
+      logo: "logos/laoac.png"
+    },
+    {
+      name: "Lingayen",
+      phone: "0998-598-5109 / 0916-562-5353",
+      logo: "logos/lingayen.png"
+    },
+    {
+      name: "Mabini",
+      phone: "0998-598-5102",
+      logo: "logos/mabini.png"
+    },
+    {
+      name: "Malasiqui",
+      phone: "0998-598-5116",
+      logo: "logos/malasiqui.png"
+    },
+    {
+      name: "Manaoag",
+      phone: "0998-598-5123 / 0906-250-9300",
+      logo: "logos/manaoag.png"
+    },
+    {
+      name: "Mangaldan",
+      phone: "0998-598-5124 / 0950-770-8580",
+      logo: "logos/mangaldan.png"
+    },
+    {
+      name: "Mangatarem",
+      phone: "0916-460-5070 / 0998-598-5110",
+      logo: "logos/mangatarem.png"
+    },
+    {
+      name: "Mapandan",
+      phone: "0915-979-3390 / 0998-598-5117",
+      logo: "logos/mapandan.png"
+    },
+    {
+      name: "Natividad",
+      phone: "0998-598-5139 / 0927-615-9452",
+      logo: "logos/natividad.png"
+    },
+    {
+      name: "Pozorrubio",
+      phone: "0998-598-5131 / 0915-253-3140",
+      logo: "logos/pozorrubio.png"
+    },
+    {
+      name: "Rosales",
+      phone: "0917-308-9676 / 0998-598-5140",
+      logo: "logos/rosales.png"
+    },
+    {
+      name: "San Carlos",
+      phone: "0998-598-5118",
+      logo: "logos/san_carlos.png"
+    },
+    {
+      name: "San Fabian",
+      phone: "0998-598-5125",
+      logo: "logos/san_fabian.png"
+    },
+    {
+      name: "San Jacinto",
+      phone: "0906-525-9725 / 0998-598-5126",
+      logo: "logos/san_jacinto.png"
+    },
+    {
+      name: "San Manuel",
+      phone: "0917-904-7657 / 0998-598-5141",
+      logo: "logos/san_manuel.png"
+    },
+    {
+      name: "San Nicolas",
+      phone: "0998-598-5142 / 0956-351-9775",
+      logo: "logos/san_nicolas.png"
+    },
+    {
+      name: "San Quintin",
+      phone: "0966-438-2033 / 0998-598-5143",
+      logo: "logos/san_quintin.png"
+    },
+    {
+      name: "Santa Maria",
+      phone: "0998-598-5144",
+      logo: "logos/santa_maria.png"
+    },
+    {
+      name: "Sison",
+      phone: "0998-598-5132 / 0917-917-1386",
+      logo: "logos/sison.png"
+    },
+    {
+      name: "Sta Barbara",
+      phone: "0998-598-5120",
+      logo: "logos/sta_barbara.png"
+    },
+    {
+      name: "Sto Tomas",
+      phone: "0907-206-8869 / 0998-598-5133",
+      logo: "logos/sto_tomas.png"
+    },
+    {
+      name: "Sual",
+      phone: "0998-598-5103",
+      logo: "logos/sual.png"
+    },
+    {
+      name: "Tayug",
+      phone: "0915-979-7076 / 0998-598-5145",
+      logo: "logos/tayug.png"
+    },
+    {
+      name: "Umingan",
+      phone: "0906-477-6427 / 0998-598-5146",
+      logo: "logos/umingan.png"
+    },
+    {
+      name: "Urbiztondo",
+      phone: "0998-598-5112 / 0999-677-5218",
+      logo: "logos/urbiztondo.png"
+    },
+    {
+      name: "Urdaneta",
+      phone: "0998-598-5135 / 0916-226-3641",
+      logo: "logos/urdaneta.png"
+    },
+    {
+      name: "Villasis",
+      phone: "0998-598-5136 / 0915-512-6832",
+      logo: "logos/villasis.png"
+    }
+  ];
+
+  const list = document.getElementById("municipalityList");
+  const favs = document.getElementById("favoritesList");
+  const noFavoritesMessage = document.getElementById("noFavoritesMessage");
+
+  // Function to create a hotline card
+  async function createHotlineCard(municipality, container) {
+    const card = document.createElement("div");
+    card.className = "hotline-card";
+    card.dataset.name = municipality.name.toLowerCase();
+    
+    // Get logo URL from logo manager
+    const logoUrl = await logoManager.getLogo(municipality.name);
+    
+    card.innerHTML = `
+      <img class="hotline-avatar" src="${logoUrl}" alt="${municipality.name} Police" 
+           onerror="this.src='${logoManager.generateSVGBadge(municipality.name)}'">
+      <div>
+        <div class="hotline-name">${municipality.name}</div>
+        <div class="hotline-number">${municipality.phone}</div>
+      </div>
+      ${container === list ? '<button class="favorite-btn">Add to Favorites</button>' : ''}
+    `;
+
+    if (container === list) {
+      const btn = card.querySelector(".favorite-btn");
+      btn.onclick = () => {
+        if (!btn.classList.contains("active")) {
+          btn.classList.add("active");
+          btn.textContent = "Favorited";
+          
+          // Create favorite card (without button)
+          createHotlineCard(municipality, favs).then(favCard => {
+            favs.appendChild(favCard);
+            noFavoritesMessage.style.display = "none";
+          });
+          
+          // Store in localStorage
+          let favorites = JSON.parse(localStorage.getItem('hotlineFavorites') || '[]');
+          if (!favorites.includes(municipality.name)) {
+            favorites.push(municipality.name);
+            localStorage.setItem('hotlineFavorites', JSON.stringify(favorites));
+          }
+        } else {
+          btn.classList.remove("active");
+          btn.textContent = "Add to Favorites";
+          
+          // Remove from favorites
+          [...favs.children].find(c => c.dataset.name === card.dataset.name)?.remove();
+          
+          // Update localStorage
+          let favorites = JSON.parse(localStorage.getItem('hotlineFavorites') || '[]');
+          favorites = favorites.filter(f => f !== municipality.name);
+          localStorage.setItem('hotlineFavorites', JSON.stringify(favorites));
+          
+          // Show "no favorites" message if empty
+          if (favs.children.length === 1 && favs.firstChild === noFavoritesMessage) {
+            noFavoritesMessage.style.display = "block";
+          } else if (favs.children.length === 0) {
+            favs.appendChild(noFavoritesMessage);
+            noFavoritesMessage.style.display = "block";
+          }
+        }
+      };
+    }
+
+    return card;
+  }
+
+  // Load all municipalities
+  const loadingPromises = municipalities.map(async (m) => {
+    const card = await createHotlineCard(m, list);
+    list.appendChild(card);
+  });
+  
+  // Wait for all cards to load
+  await Promise.all(loadingPromises);
+
+  // Load favorites from localStorage
+  const savedFavorites = JSON.parse(localStorage.getItem('hotlineFavorites') || '[]');
+  
+  if (savedFavorites.length > 0) {
+    noFavoritesMessage.style.display = "none";
+    
+    const favPromises = savedFavorites.map(async (favName) => {
+      const municipality = municipalities.find(m => m.name === favName);
+      if (municipality) {
+        const favCard = await createHotlineCard(municipality, favs);
+        favs.appendChild(favCard);
+        
+        // Mark corresponding button as active
+        const originalCard = [...list.children].find(c => c.dataset.name === favName.toLowerCase());
+        if (originalCard) {
+          const btn = originalCard.querySelector(".favorite-btn");
+          btn.classList.add("active");
+          btn.textContent = "Favorited";
+        }
+      }
+    });
+    
+    await Promise.all(favPromises);
+  }
+
+  /* SEARCH FUNCTION */
+  const searchInput = document.getElementById("searchInput");
+  searchInput.addEventListener("input", () => {
+    const query = searchInput.value.toLowerCase();
+    document.querySelectorAll(".hotline-card").forEach(card => {
+      // Only search in main list, not favorites
+      if (card.parentElement === list) {
+        card.style.display = card.dataset.name.includes(query) ? "flex" : "none";
+      }
+    });
+  });
+});
+</script>
+
+</body>
+</html>

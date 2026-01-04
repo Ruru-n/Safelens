@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Security Settings</title>
+   <script src="https://cdn.tailwindcss.com"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+   <link href="https://fonts.googleapis.com/css?family=Inter:500,400|Afacad:500" rel="stylesheet">
+   <style>
+       * {
+           -webkit-font-smoothing: antialiased;
+           box-sizing: border-box;
+       }
+
+
+       html,
+       body {
+           margin: 0;
+           height: 100%;
+           font-family: 'Inter', sans-serif;
+       }
+
+
+       button:focus-visible {
+           outline: 2px solid #4a90e2 !important;
+           outline: -webkit-focus-ring-color auto 5px !important;
+       }
+
+
+       a {
+           text-decoration: none;
+       }
+
+
+       :root {
+           --brandingblack: rgba(50, 50, 50, 1);
+       }
+
+
+       /* Custom styles */
+       .back-btn-arrow {
+           transform: rotate(180deg);
+       }
+
+
+       .password-dots {
+           letter-spacing: 2px;
+       }
+
+
+       .divider-line {
+           height: 2px;
+           background-color: #E5E7EB;
+       }
+   </style>
+   <script>
+       tailwind.config = {
+           theme: {
+               extend: {
+                   colors: {
+                       brandingblack: "var(--brandingblack)",
+                   },
+                   screens: {
+                       'xs': '480px',
+                       '3xl': '1920px',
+                   }
+               },
+           },
+           plugins: [],
+       };
+   </script>
+</head>
+
+
+<body class="bg-[#f6f9ff] min-h-screen">
+   <div class="container mx-auto px-4 py-4 w-full max-w-4xl">
+       <!-- Header -->
+       <div class="flex items-center mb-8 mt-4">
+           <button class="back-btn w-8 h-10 mr-4 flex items-center justify-center hover:opacity-80 transition-opacity">
+               <svg class="back-btn-arrow w-4 h-6" viewBox="0 0 20 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                   <path d="M4 2L16 16L4 30" stroke="#171616" stroke-width="4" stroke-linecap="round"
+                       stroke-linejoin="round" />
+               </svg>
+           </button>
+           <h1 class="text-3xl font-medium font-['Afacad'] text-[#171616]">Security</h1>
+       </div>
+
+
+       <!-- Password Change Section (Flask Form Integrated) -->
+       <div class="bg-white rounded-xl shadow-[0px_4px_4px_#00000040] w-full mb-6 p-6">
+           <h2 class="text-2xl font-bold mb-4">Change Password</h2>
+
+
+           {% with messages = get_flashed_messages(with_categories=true) %}
+           {% if messages %}
+           <div class="mb-4">
+               {% for category, message in messages %}
+               <div
+                   class="p-3 mb-2 rounded {{ 'bg-green-100 text-green-800' if category=='success' else 'bg-red-100 text-red-800' }}">
+                   {{ message }}
+               </div>
+               {% endfor %}
+           </div>
+           {% endif %}
+           {% endwith %}
+
+
+           <form action="{{ url_for('change_password') }}" method="POST" class="grid grid-cols-1 gap-4">
+               <div>
+                   <label class="block text-gray-700 mb-1" for="current_password">Current Password</label>
+                   <input type="password" name="current_password" id="current_password"
+                       class="w-full p-2 border border-gray-300 rounded" required>
+               </div>
+
+
+               <div>
+                   <label class="block text-gray-700 mb-1" for="new_password">New Password</label>
+                   <input type="password" name="new_password" id="new_password"
+                       class="w-full p-2 border border-gray-300 rounded" required>
+               </div>
+
+
+               <div>
+                   <label class="block text-gray-700 mb-1" for="confirm_password">Confirm New Password</label>
+                   <input type="password" name="confirm_password" id="confirm_password"
+                       class="w-full p-2 border border-gray-300 rounded" required>
+               </div>
+
+
+               <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700 transition">
+                   Update Password
+               </button>
+           </form>
+       </div>
+
+
+       <!-- 2FA Section (Unchanged) -->
+       <div class="bg-white rounded-xl shadow-[0px_4px_4px_#00000040] w-full mb-6 p-4">
+           <h2 class="text-2xl font-medium font-['Afacad'] text-[#101111] mb-3">Two-Factor Authentication (2FA)</h2>
+           <p class="text-base font-['Inter'] text-[#100f0f] mb-6">
+               Keep your account secure by enabling 2FA from an authenticator.
+               <span class="text-[#9a9a9a] cursor-pointer hover:underline">Learn more</span>
+           </p>
+
+
+           <!-- TOTP Option -->
+           <div class="mb-8">
+               <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                   <div class="flex items-start gap-6">
+                       <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center mt-1">
+                           <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                               <path
+                                   d="M18 3C9.7155 3 3 9.7155 3 18C3 26.2845 9.7155 33 18 33C26.2845 33 33 26.2845 33 18C33 9.7155 26.2845 3 18 3ZM18 30C11.373 30 6 24.627 6 18C6 11.373 11.373 6 18 6C24.627 6 30 11.373 30 18C30 24.627 24.627 30 18 30ZM19.5 9H16.5V19.5H24V16.5H19.5V9Z"
+                                   fill="#101111" />
+                           </svg>
+                       </div>
+                       <div class="flex-1">
+                           <h3 class="text-lg font-medium font-['Afacad'] text-[#101111]">Third party authenticator
+                               apps (TOTP)</h3>
+                           <p class="text-sm font-['Inter'] text-[#9a9a9a] mt-1">
+                               Time-based One-Time Password is a secured method for two-factor authentication (2FA)
+                           </p>
+                       </div>
+                   </div>
+                   <div class="flex items-center gap-4">
+                       <div
+                           class="w-[135px] h-8 rounded-[10px] border border-[#19b800] shadow-[0px_4px_4px_#00000040] flex items-center justify-center">
+                           <span class="text-base font-['Inter'] text-[#19b800]">Configured</span>
+                       </div>
+                       <button
+                           class="w-[133px] h-10 rounded-[10px] border border-black shadow-[0px_4px_4px_#00000040] flex items-center justify-center hover:bg-gray-50 transition-colors">
+                           <span class="text-base font-['Inter'] text-[#100f0f]">Edit</span>
+                       </button>
+                   </div>
+               </div>
+               <div class="divider-line w-full mt-6"></div>
+           </div>
+
+
+           <!-- Backup Emails Option -->
+           <div class="mb-8">
+               <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                   <div class="flex items-start gap-6">
+                       <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center mt-1">
+                           <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                               <path
+                                   d="M30 6H6C4.3425 6 3 7.3425 3 9V27C3 28.6575 4.3425 30 6 30H30C31.6575 30 33 28.6575 33 27V9C33 7.3425 31.6575 6 30 6ZM30 9V12.18L18 19.68L6 12.18V9H30ZM6 27V15.75L17.5725 22.845C17.8455 23.001 18.1545 23.001 18.4275 22.845L30 15.75V27H6Z"
+                                   fill="#101111" />
+                           </svg>
+                       </div>
+                       <div class="flex-1">
+                           <h3 class="text-lg font-medium font-['Afacad'] text-[#101111]">Backup emails</h3>
+                           <p class="text-sm font-['Inter'] text-[#9a9a9a] mt-1">
+                               This extra layer of protection ensures that you can easily recover access.
+                           </p>
+                       </div>
+                   </div>
+                   <div class="flex items-center gap-4">
+                       <div
+                           class="w-[135px] h-8 rounded-[10px] border border-[#19b800] shadow-[0px_4px_4px_#00000040] flex items-center justify-center">
+                           <span class="text-base font-['Inter'] text-[#19b800]">Verified</span>
+                       </div>
+                       <button
+                           class="w-[133px] h-10 rounded-[10px] border border-black shadow-[0px_4px_4px_#00000040] flex items-center justify-center hover:bg-gray-50 transition-colors">
+                           <span class="text-base font-['Inter'] text-[#100f0f]">Edit</span>
+                       </button>
+                   </div>
+               </div>
+               <div class="divider-line w-full mt-6"></div>
+           </div>
+
+
+           <!-- Passcodes Option -->
+           <div class="mb-8">
+               <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                   <div class="flex items-start gap-6">
+                       <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center mt-1">
+                           <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                               <path
+                                   d="M27 12H24V9C24 7.3425 22.6575 6 21 6H15C13.3425 6 12 7.3425 12 9V12H9C7.3425 12 6 13.3425 6 15V27C6 28.6575 7.3425 30 9 30H27C28.6575 30 30 28.6575 30 27V15C30 13.3425 28.6575 12 27 12ZM15 9H21V12H15V9ZM27 27H9V15H27V27ZM18 19.5C16.3425 19.5 15 20.8425 15 22.5C15 24.1575 16.3425 25.5 18 25.5C19.6575 25.5 21 24.1575 21 22.5C21 20.8425 19.6575 19.5 18 19.5Z"
+                                   fill="#101111" />
+                           </svg>
+                       </div>
+                       <div class="flex-1">
+                           <h3 class="text-lg font-medium font-['Afacad'] text-[#101111]">Passcodes</h3>
+                           <p class="text-sm font-['Inter'] text-[#9a9a9a] mt-1">
+                               Backup keys are essential for two-factor authentication (2FA)
+                           </p>
+                       </div>
+                   </div>
+                   <div class="flex items-center gap-4">
+                       <div
+                           class="w-[135px] h-8 rounded-[10px] border border-[#19b800] shadow-[0px_4px_4px_#00000040] flex items-center justify-center">
+                           <span class="text-base font-['Inter'] text-[#19b800]">Generated</span>
+                       </div>
+                       <button
+                           class="w-[133px] h-10 rounded-[10px] border border-black shadow-[0px_4px_4px_#00000040] flex items-center justify-center hover:bg-gray-50 transition-colors">
+                           <span class="text-base font-['Inter'] text-[#100f0f]">View</span>
+                       </button>
+                   </div>
+               </div>
+               <div class="divider-line w-full mt-6"></div>
+           </div>
+
+
+           <!-- SMS Option -->
+           <div>
+               <div class="flex flex-col md:flex-row md:items-start justify-between gap-4">
+                   <div class="flex items-start gap-6">
+                       <div class="w-8 h-8 flex-shrink-0 flex items-center justify-center mt-1">
+                           <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                               <path
+                                   d="M30 6H6C4.3425 6 3 7.3425 3 9V27C3 28.6575 4.3425 30 6 30H30C31.6575 30 33 28.6575 33 27V9C33 7.3425 31.6575 6 30 6ZM30 27H6V12H30V27ZM18 19.5C16.3425 19.5 15 20.8425 15 22.5C15 24.1575 16.3425 25.5 18 25.5C19.6575 25.5 21 24.1575 21 22.5C21 20.8425 19.6575 19.5 18 19.5Z"
+                                   fill="#101111" />
+                           </svg>
+                       </div>
+                       <div class="flex-1">
+                           <h3 class="text-lg font-medium font-['Afacad'] text-[#101111]">Text Messages (SMS)</h3>
+                           <p class="text-sm font-['Inter'] text-[#9a9a9a] mt-1">
+                               Adds security by sending a verification code to your phone.
+                           </p>
+                       </div>
+                   </div>
+                   <button
+                       class="w-[133px] h-10 rounded-[10px] border border-black shadow-[0px_4px_4px_#00000040] flex items-center justify-center hover:bg-gray-50 transition-colors">
+                       <span class="text-base font-['Inter'] text-[#100f0f]">Add</span>
+                   </button>
+               </div>
+           </div>
+       </div>
+
+
+       <!-- BACK & SAVE BUTTONS at Bottom-Right -->
+       <div class="flex justify-end mt-6 gap-4">
+           <!-- Back Button -->
+           <form action="{{ url_for('lensHome') }}" method="GET" class="inline">
+               <button type="submit"
+                   class="px-6 h-12 rounded-lg shadow-[0px_4px_4px_#00000040] bg-gray-300 hover:bg-gray-400 text-black transition flex items-center justify-center">
+                   <span class="text-base font-['Inter'] font-medium">Back</span>
+               </button>
+           </form>
+
+
+           <!-- Save Button -->
+           <form id="saveForm" action="{{ url_for('save_security') }}" method="POST" class="inline">
+
+
+               <button type="submit"
+                   class="px-6 h-12 rounded-lg shadow-[0px_4px_4px_#00000040] bg-blue-600 hover:bg-blue-700 text-white transition flex items-center justify-center">
+                   <span class="text-base font-['Inter'] font-medium">Save</span>
+               </button>
+           </form>
+       </div>
+
+
+
+
+   </div>
+
+
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+   <script>
+       document.addEventListener('DOMContentLoaded', function () {
+
+
+           // === BACK BUTTON ===
+           const backBtn = document.querySelector('.back-btn');
+           if (backBtn) {
+               backBtn.addEventListener('click', () => window.history.back());
+           }
+
+
+           // === EDIT BUTTONS ===
+           const actionButtons = document.querySelectorAll('button.border-black');
+           actionButtons.forEach(btn => {
+               btn.addEventListener('click', () => {
+                   const span = btn.querySelector('span');
+                   const label = span ? span.textContent.trim() : btn.textContent.trim();
+                   Swal.fire({
+                       icon: 'info',
+                       title: 'Edit',
+                       text: `Edit clicked for ${label}`,
+                       timer: 1500,
+                       showConfirmButton: false
+                   });
+               });
+           });
+
+
+           // === LEARN MORE ===
+           const learnMore = document.querySelector('span.text-[#9a9a9a]');
+           if (learnMore) {
+               learnMore.addEventListener('click', () => {
+                   Swal.fire({
+                       icon: 'info',
+                       title: 'Learn More',
+                       text: 'Opening documentation about 2FA...',
+                       timer: 1500,
+                       showConfirmButton: false
+                   });
+               });
+           }
+
+
+           // === SAVE BUTTON FLASH ===
+           const saveForm = document.getElementById('saveForm');
+           if (saveForm) {
+               saveForm.addEventListener('submit', function (e) {
+                   e.preventDefault(); // pigilan submit
+
+
+                   Swal.fire({
+                       icon: 'success',
+                       title: 'Saved Successfully!',
+                       text: 'Your security settings have been updated.',
+                       confirmButtonText: 'OK',
+                       confirmButtonColor: '#145da0'
+                   }).then(() => {
+                       window.history.back(); // balik previous page
+                   });
+               });
+           }
+
+
+       });
+   </script>
+
+
+</body>
+
+
+</html>
+

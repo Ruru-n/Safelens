@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+
+
+   <style>
+       body {
+           margin: 0;
+           font-family: "Segoe UI", Arial, sans-serif;
+           height: 100vh;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+
+
+           /* Blue Gradient Background */
+           background: linear-gradient(to bottom, rgba(20, 93, 160, 1), rgba(7, 34, 58, 1));
+           position: relative;
+           overflow: hidden;
+       }
+
+
+       /* White Fold Arc Shape */
+
+
+       .card {
+           width: 70%;
+           max-width: 780px; /* mas malaki */
+           height:592px;
+           background: #fff;
+           padding: 60px 40px; /* mas spacious */
+           border-radius: 41px;
+           text-align: center;
+           box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+       }
+
+
+       .card img {
+           width: 370px;     /* MAS MALAKI */
+           max-width: none;
+           height: auto;
+           object-fit: cover;
+           margin-top: -27px;
+           margin-bottom: 25px;
+       }
+
+
+       .corner-curve {
+           position: absolute;
+           bottom: 0;
+           right:0px;
+           width: 50%;
+           height: 460px; /* <<< control size ng curve */
+           overflow: hidden;
+           pointer-events: none;
+           z-index: -1; /* SEND TO BACK */
+       }
+
+
+       .curve {
+           width: 100%;
+           height: auto; /* keep original aspect ratio */
+           object-fit: contain; /* no crop */
+           z-index: 2; /* BRING TO FRONT */
+           position: relative; /* REQUIRED para gumana ang z-index */
+       }
+
+
+       h1 {
+           font-size: 50px;
+           color: #2B2B2B;
+           margin-top:5px;
+           margin-bottom: 10px;
+       }
+
+
+       /* Subtitle */
+       p {
+           font-size: 17px;
+           color: black;
+           margin-bottom: 20px;
+       }
+
+
+       .skip {
+           margin-top: 15px;
+           color: #4A4A4A;
+           cursor: pointer;
+           font-size: 16px;
+       }
+
+
+       .skip:hover {
+           color: #0d519e; 
+           font-weight: bold;     /* kulay blue kapag hover */
+           transform: scale(1.1); /* medyo lumaki */
+       }
+
+
+       /* Dots Indicator */
+       .dots {
+           display: flex;
+           justify-content: center;
+           gap: 10px;
+           margin: 10px 0;
+           position: relative;
+           z-index: 1;
+       }
+
+
+       .dot {
+           width: 10px;
+           height: 10px;
+           border-radius: 50%;
+           background: #d4d4d4;
+       }
+
+
+       .dot-active {
+           background: #083A72;
+       }
+
+
+       .next-btn {
+           position: absolute;
+           bottom: 80px;
+           right: 25%;
+           transform: translateX(50%);
+           width: 55px;
+           height: 55px;
+           background: #083A72;
+           border-radius: 50%;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           cursor: pointer;
+           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+       }
+
+
+       .next-btn span {
+           color: #fff;
+           font-size: 25px;
+           font-weight: bold;
+       }
+
+
+       @media (max-width: 600px) {
+           .card {
+               width: 90%;
+               padding: 40px 20px;
+           }
+
+
+           .next-btn {
+               right: 10%;
+           }
+       }
+   </style>
+
+
+</head>
+
+
+<body>
+   <div class="card">
+       <img src="{{url_for('static', filename = 'analytics.png')}}" class="analytics" alt="analytics">
+       <h1>Explore Crime Heat Map</h1>
+       <p>Gain insights through charts and data summaries showing<br> crime types and frequencies.</p>
+
+
+
+
+       <div class="dots">
+           <div class="dot"></div>
+           <div class="dot"></div>
+           <div class="dot dot-active"></div>
+           <div class="dot"></div>
+           <div class="dot"></div>
+       </div>
+
+
+
+
+       <div id = "skip" class="skip">Skip</div>
+
+
+       <div id = "nextBtn" class="next-btn">
+           <span>›</span>
+       </div>
+
+
+   </div>
+
+
+   <div class="corner-curve">
+       <img src="{{ url_for('static', filename='curve.png') }}" class="curve">
+   </div>
+
+
+
+
+   <script>
+       document.getElementById("skip").addEventListener("click", function () {
+           window.location.href = "{{ url_for('lensHome') }}";
+       });
+
+
+       document.getElementById("nextBtn").addEventListener("click", function () {
+           window.location.href = "{{ url_for('fourthWelcome') }}";
+       });
+   </script>
+
+
+</body>
+
+
+</html>
+

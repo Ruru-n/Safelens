@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Document</title>
+
+
+   <style>
+       * {
+           margin: 0;
+           padding: 0;
+           box-sizing: border-box;
+           font-family: Arial, sans-serif;
+       }
+
+
+       /* NAVBAR */
+       nav {
+           width: 100%;
+           padding: 15px 50px;
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           background: #ffffff;
+           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+           position: fixed;
+           top: 0;
+           left: 0;
+           z-index: 100;
+       }
+
+
+       .logo {
+           height: 50px;
+           /* fixed height – SAME SPACE in navbar */
+           display: flex;
+           align-items: center;
+       }
+
+
+       .logo-img {
+           max-width: 200px;
+           /* pinakamalaking width */
+           max-height: 100px;
+           /* pinakamataas */
+           height: 75px;
+           /* ↑ increase this to enlarge the logo */
+           width: auto;
+           margin-bottom: 10px;
+           margin-left: -20px;
+       }
+
+
+       .user-buttons {
+           display: flex;
+           gap: 10px;
+       }
+
+
+       .btn {
+           padding: 8px 16px;
+           border-radius: 3px;
+           border: none;
+           cursor: pointer;
+           font-size: 15px;
+       }
+
+
+       .btn-login {
+           background: white !important;
+           border: 1px solid #0077cc !important;
+           color: #0077cc;
+           padding: 8px 16px;
+           border-radius: 3px;
+           cursor: pointer;
+           font-size: 15px;
+           transition: transform 0.15s ease;
+           /* smooth zoom effect */
+       }
+
+
+       .btn-login:hover {
+           transform: scale(1.20);
+           /* magiging mas malaki */
+           background: white;
+           /* SAME COLOR */
+           color: #0077cc;
+           border: 1px solid #0077cc;
+       }
+
+
+
+
+       .btn-guest {
+           background: #0077cc;
+           color: white;
+           transition: transform 0.15s ease;
+       }
+
+
+       .btn-guest:hover {
+           background: #0077cc;
+           transform: scale(1.20);
+       }
+
+
+       /* Login-pics section */
+       .login-section {
+           width: 100%;
+           padding: 60px 80px;
+           /* solid blue background */
+           height: 780px;
+           display: flex;
+           /* center container horizontally */
+           background: linear-gradient(to bottom, rgba(20, 93, 160, 1), rgba(7, 34, 58, 1));
+       }
+
+
+       .login-container {
+           display: flex;
+           width: 100%;
+           max-width: 1200px;
+           /* optional para hindi masyadong malaki sa wide screens */
+           color: white;
+           gap: 40px;
+       }
+
+
+       .login-left {
+           margin-top: 50px;
+           text-align: left;
+           display: flex;
+           flex-direction: column;
+           /* para h1, p, button stacked vertically */
+           justify-content: center;
+           margin-left: 5px;
+       }
+
+
+       .login-left h1 {
+           font-size: 70px;
+           font-weight: bold;
+           line-height: 1.2;
+           margin-bottom: 25px;
+           text-align: left;
+           color: white;
+       }
+
+
+       .login-left p {
+           font-size: 22px;
+           margin-top: 10px;
+           color: white;
+       }
+
+
+       .btn-leftButton {
+           margin-top: 5px;
+           background: white;
+           color: rgba(20, 93, 160, 1);
+           padding: 12px;
+           border-radius: 6px;
+           border: none;
+           font-size: 30px;
+           width: 270px;
+           cursor: pointer;
+       }
+
+
+       .btn-leftButton:hover {
+           background: #ebb250;
+           color: white;
+       }
+
+
+       .login-right {
+           display: flex;
+           justify-content: flex-end;
+           align-items: center;
+           margin-left: auto;
+       }
+
+
+       .login-right img {
+           width: 90%;
+           max-width: 460px;
+       }
+
+
+       .image-box {
+           margin-top: 180px;
+           background-color: white;
+           padding: 10px;
+           display: flex;
+           height: 700px;
+           align-items: center;
+           justify-content: center;
+
+
+           border-top-left-radius: 12px;
+           border-top-right-radius: 12px;
+           border-bottom-left-radius: 12px;
+           border-bottom-right-radius: 12px;
+       }
+
+
+       .image-box img {
+           width: 100%;
+           max-width: 600px;
+           height: auto;
+           border-radius: 10px;
+           /* optional: rounded corners sa image */
+       }
+
+
+       :root {
+           --gap: 16px;
+           /* spacing between cards */
+           --card-bg: rgba(247, 251, 253, 1);
+           --card-border: #e3e7ee;
+           --card-radius: 12px;
+           --card-shadow: 0 6px 18px rgba(20, 30, 60, 0.08);
+       }
+
+
+       body {
+           font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+           background: #f5f7fb;
+           margin: 0px;
+           color: #10203a;
+       }
+
+
+       /* Container that holds the cards */
+       .cards-row {
+           display: flex;
+           flex-wrap: nowrap;
+           /* keeps them on one line when enough space */
+           gap: var(--gap);
+           /* gap between cards (modern and simple) */
+           align-items: stretch;
+           /* make cards equal height */
+           justify-content: space-between;
+       }
+
+
+       /* Each card */
+       .card {
+           background: var(--card-bg);
+           border: 1px solid var(--card-border);
+           border-radius: var(--card-radius);
+           box-shadow: var(--card-shadow);
+           padding: 30px;
+           flex: 1 1 0;
+           height: 275px;
+           /* allow cards to grow and shrink equally */
+           min-width: 0;
+           /* prevents overflow with long content */
+           transition: transform .18s ease, box-shadow .18s ease;
+           display: flex;
+           flex-direction: column;
+           gap: 12px;
+           margin-top: -10px;
+           margin-bottom: 40px;
+           align-items: flex-start;
+       }
+
+
+       .card-title-group {
+           display: flex;
+           flex-direction: column;
+       }
+
+
+       .card-icon {
+           width: 42px;
+           height: auto;
+           margin-left: -5px;
+       }
+
+
+
+
+
+
+
+
+       /* Make exactly 4 columns on wide screens */
+       @media (min-width: 960px) {
+           .card {
+               flex-basis: calc((100% - 3 * var(--gap)) / 4);
+           }
+       }
+
+
+       /* Fallback: 2 columns on medium screens */
+       @media (min-width: 640px) and (max-width: 959px) {
+           .card {
+               flex-basis: calc((100% - var(--gap)) / 2);
+           }
+       }
+
+
+       /* On small screens, stack vertically */
+       @media (max-width: 639px) {
+           .cards-row {
+               flex-wrap: wrap;
+           }
+
+
+           .card {
+               flex-basis: 100%;
+           }
+       }
+
+
+       .card .title {
+           font-weight: 700;
+           font-size: 1.45rem;
+       }
+
+
+       .card .desc {
+           color: #475569;
+           font-size: 1.05rem;
+           line-height: 1.4;
+           flex: 1;
+       }
+
+
+
+
+
+
+       .card .cta {
+           text-align: right;
+       }
+
+
+       .card-header {
+           width: 100%;
+           display: flex;
+           align-items: flex-start;
+           justify-content: flex-start;
+           gap: 10px;
+           /* distance between text and image */
+       }
+
+
+
+
+       .btn {
+           display: inline-block;
+           padding: 8px 12px;
+           border-radius: 10px;
+           border: none;
+           background: #0e76ff;
+           font-weight: 600;
+           cursor: pointer;
+           text-decoration: none;
+           font-size: .95rem;
+       }
+
+
+       @media(max-width: 900px) {
+           .login-container {
+               flex-direction: column-reverse;
+               text-align: center;
+           }
+
+
+           .login-right {
+               margin-left: 0;
+               justify-content: center;
+           }
+
+
+           .image-box img {
+               width: 70%;
+           }
+       }
+
+
+       /* OUR FEATURES LABEL */
+       .ourFeatures {
+           width: 100%;
+           display: flex;
+           justify-content: center;
+           /* center horizontally */
+           margin-top: 90px;
+           margin-bottom: 20px;
+       }
+
+
+       .ourFeatures p {
+           background: rgba(196, 228, 237, 1);
+           /* blue rectangle background */
+           color: rgba(46, 51, 75, 1);
+           /* white text */
+           padding: 8px 20px;
+           /* inner spacing */
+           font-size: 20px;
+           border-radius: 8px;
+           /* rounded rectangle */
+           font-weight: normal;
+           letter-spacing: 0.5px;
+       }
+
+
+       /* PERSPECTIVE SECTION */
+       .perspective {
+           width: 100%;
+           text-align: center;
+           /* center align text */
+           margin-bottom: 40px;
+       }
+
+
+       .perspective h1 {
+           font-size: 36px;
+           font-weight: 700;
+           margin-bottom: 10px;
+           color: #10203a;
+       }
+
+
+       .perspective p {
+           font-size: 18px;
+           color: #475569;
+           line-height: 1.5;
+       }
+
+
+       .footer {
+           width: 1467px;
+           display: flex;
+           justify-content: space-between;
+           /* big space in the middle */
+           align-items: center;
+           padding: 20px 40px;
+           background: linear-gradient(to bottom, rgba(20, 93, 160, 1), rgba(7, 34, 58, 1));
+           font-size: 14px;
+           color: white;
+           margin-left: -27px;
+           margin-top: 40px;
+           margin-bottom: -30px;
+           border-top: 1px solid #d3d8e6;
+
+
+       }
+
+
+       .rightFooter {
+           text-align: right;
+           margin-right: -24px;
+       }
+   </style>
+</head>
+
+
+<body>
+   <nav>
+       <div class="logo">
+           <img class="logo-img" src="{{ url_for('static', filename='offLogo.png') }}" alt="offLogo">
+       </div>
+
+
+       <div class="user-buttons">
+           <button id="login-btn" class="btn btn-login">Login</button>
+           <button class="btn btn-guest">Guest Mode</button>
+       </div>
+   </nav>
+
+
+   <body>
+       <!-- White background page -->
+       <div class="page">
+           <!-- Blue container -->
+           <section class="login-section">
+               <div class="login-left">
+                   <h1>Data-Driven <br>Crime Awareness<br>for Pangasinan</h1>
+                   <button class="btn-leftButton">Explore as Guest</button>
+                   <p>Guest users can explore public crime data.<br>Login to view detailed analytics.</p>
+               </div>
+
+
+               <div class="login-right">
+                   <div class="image-box">
+                       <img src="{{ url_for('static', filename='illustration.png') }}" alt="illustration"
+                           style="height:400px;">
+                   </div>
+               </div>
+           </section>
+       </div>
+
+
+       <div>
+           <br>
+           <br>
+
+
+           <div class="ourFeatures">
+               <p>Our Features</p>
+           </div>
+
+
+           <div class="perspective">
+               <h1>A New Perspective on Public Safety</h1>
+               <p>Leveraging cutting_edge technology to empower law enforcement and build safer communities<br>
+                   throughout Pangasinan</p>
+           </div>
+
+
+           <div class="cards-row">
+
+
+               <!-- CARD 1 -->
+               <article class="card">
+
+
+                   <div class="card-header">
+                       <img class="card-icon" src="{{ url_for('static', filename='icon1.png') }}">
+                       <div class="card-title-group">
+                           <h3 class="title">Interactive Crime<br>Heat Map</h3>
+                       </div>
+                   </div>
+
+
+                   <p class="desc">Explore crime patterns across regions over time.
+                       Our heat map highlights areas with higher incidents,
+                       helping communities and authorities understand trends and plan accordingly.</p>
+
+
+               </article>
+
+
+               <!-- CARD 2 -->
+               <article class="card">
+
+
+                   <div class="card-header">
+                       <img class="card-icon" src="{{ url_for('static', filename='icon2.png') }}">
+                       <div class="card-title-group">
+                           <h3 class="title">Real-Time Crime Alerts</h3>
+                       </div>
+                   </div>
+
+
+                   <p class="desc">Get insights into crime statistics with our easy-to-use analytics dashboard.
+                       Track patterns, monitor trends, and make informed decisions to enhance safety.</p>
+
+
+               </article>
+
+
+               <!-- CARD 3 -->
+               <article class="card">
+
+
+                   <div class="card-header">
+                       <img class="card-icon" src="{{ url_for('static', filename='icon3.png') }}">
+                       <div class="card-title-group">
+                           <h3 class="title">Crime Statistics Dashboard</h3>
+                       </div>
+                   </div>
+
+
+                   <p class="desc">Quickly access local emergency contacts. Report incidents or reach out for help when
+                       needed.</p>
+
+
+               </article>
+
+
+               <!-- CARD 4 -->
+               <article class="card">
+
+
+                   <div class="card-header">
+                       <img class="card-icon" src="{{ url_for('static', filename='icon4.png') }}">
+                       <div class="card-title-group">
+                           <h3 class="title">Predictive Crime Analysis</h3>
+                       </div>
+                   </div>
+
+
+                   <p class="desc">Learn practical safety tips, preventive measures, and proactive strategies to
+                       protect yourself, your family, and your community from potential risks and criminal activities.
+                   </p>
+
+
+               </article>
+
+
+           </div>
+           <!-- FOOTER -->
+           <footer class="footer">
+               <div class="leftFooter">
+                   © 2025 SafeLens, All Rights Reserved | Last Updated: November 18, 2025
+               </div>
+               <div class="rightFooter">
+                   User Terms & Condition | Privacy Policy
+               </div>
+           </footer>
+
+
+       </div>
+       <script>
+           document.getElementById("login-btn").addEventListener("click", function () {
+               window.location.href = "{{ url_for('userLogin') }}";
+           });
+
+
+           // Explore as Guest button redirect
+           document.querySelector(".btn-leftButton").addEventListener("click", function () {
+               window.location.href = "{{ url_for('guestHome') }}";
+           });
+
+
+           // Guest Mode button redirect
+           document.querySelector(".btn-guest").addEventListener("click", function () {
+               window.location.href = "{{ url_for('guestHome') }}";
+           });
+       </script>
+
+
+   </body>
+
+
+</html>

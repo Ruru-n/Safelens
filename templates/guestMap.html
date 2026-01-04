@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>SafeLens | Search Analytics</title>
+
+
+   <style>
+       :root {
+           --shadow: 0 6px 14px rgba(13, 30, 60, 0.08);
+           --accent: #145da0;
+       }
+
+
+       /* BODY FLEX FOR FOOTER */
+       body {
+           display: flex;
+           flex-direction: column;
+           min-height: 100vh;
+           margin: 0;
+           font-family: 'Poppins', Arial, sans-serif;
+       }
+
+
+       main {
+           flex: 1;
+       }
+
+
+       /* Topbar */
+       .topbar {
+           display: flex;
+           align-items: center;
+           justify-content: space-between;
+           padding: 29px 40px;
+           background: #ffffff;
+           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+       }
+
+
+       .topbar-left {
+           flex: 1;
+       }
+
+
+       .nav {
+           display: flex;
+           align-items: center;
+       }
+
+
+       .nav-buttons {
+           margin-top: 0px;
+           display: flex;
+           align-items: center;
+           gap: 11px;
+       }
+
+
+       /* Navbar buttons */
+       .nav .nav-btn {
+           padding: 12px 35px;
+           border-radius: 6px;
+           border: none;
+           background: #ffffff;
+           box-shadow: 0 6px 14px rgba(13, 30, 60, 0.08);
+           cursor: pointer;
+           transition: all 0.2s ease;
+       }
+
+
+       .nav .nav-btn.active {
+           background: linear-gradient(to bottom, #145da0, #07223a);
+           color: #ffffff;
+           box-shadow: 0 6px 14px rgba(8, 52, 91, 0.35);
+       }
+
+
+       .nav .nav-btn:hover {
+           transform: translateY(-1px);
+           box-shadow: 0 8px 18px rgba(13, 56, 95, 0.25);
+       }
+
+
+       /* Search Bar */
+       #municipalitySearchForm {
+           display: flex;
+           gap: 6px;
+           max-width: 420px;
+       }
+
+
+       #municipalitySearch {
+           flex: 1;
+           padding: 10px 12px;
+           border-radius: 6px;
+           border: 1px solid #ccc;
+           font-size: 14px;
+       }
+
+
+       #municipalitySearchForm button {
+           padding: 10px 16px;
+           border-radius: 6px;
+           border: none;
+           background: #145da0;
+           color: #fff;
+           cursor: pointer;
+       }
+
+
+       /* Mini Card */
+       .card.mini {
+           border: solid rgb(190, 190, 190);
+           margin-top: 2px;
+           width: 400px;
+           background: #fff;
+           height: 600px;
+           border-radius: 14px;
+           box-shadow: var(--shadow);
+           overflow: hidden;
+           margin-left: -1px;
+
+
+       }
+
+
+       /* Card Image Header */
+       .card-image {
+           width: 100%;
+           height: 140px;
+       }
+
+
+       .card-image img {
+           width: 100%;
+           height: 100%;
+           object-fit: cover;
+       }
+
+
+       /* Card Content */
+       .card-content {
+           padding: 35px;
+       }
+
+
+       /* Header Row */
+       .card-header-row {
+           display: flex;
+           justify-content: space-between;
+           /* push dropdown to right */
+           align-items: center;
+           gap: 10px;
+           margin-bottom: 12px;
+       }
+
+
+       .muni-left {
+           display: flex;
+           align-items: center;
+           gap: 10px;
+           flex-shrink: 0;
+           /* prevent shrinking */
+       }
+
+
+       .muni-left h3 {
+           margin: 0;
+           font-size: 25px;
+           white-space: nowrap;
+           overflow: hidden;
+           text-overflow: ellipsis;
+       }
+
+
+       .light-indicator {
+           width: 20px;
+           height: 20px;
+           border-radius: 50%;
+           flex-shrink: 0;
+       }
+
+
+       .light-green {
+           background-color: #00b300;
+       }
+
+
+       .light-yellow {
+           background-color: #ffcc00;
+       }
+
+
+       .light-red {
+           background-color: #ff3300;
+       }
+
+
+       .light-gray {
+           background-color: #ccc;
+       }
+
+
+       /* fallback */
+       #yearDropdown {
+           padding: 6px 12px;
+           border-radius: 6px;
+           border: 1px solid #ccc;
+           font-size: 16px;
+           cursor: pointer;
+       }
+
+
+       .divider {
+           border: none;
+           height: 1px;
+           background: #ddd;
+           margin: 16px 0;
+       }
+
+
+       .card-content strong {
+           font-size: 20px;
+           font-weight: 500;
+       }
+
+
+       .card-content p {
+           font-size: 21px;
+           margin: 0;
+       }
+
+
+       /* Profile Card Dropdown */
+       .profile-card {
+           display: none;
+           position: absolute;
+           right: 0;
+           top: 50px;
+           width: 290px;
+           padding: 14px;
+           background-color: #fff;
+           box-shadow: 0 10px 22px rgba(13, 30, 60, 0.25);
+           border-radius: 12px;
+           z-index: 1000;
+       }
+
+
+       .profile-card.show {
+           display: block;
+       }
+
+
+       .profile-card .profile-info {
+           display: flex;
+           align-items: center;
+           gap: 10px;
+           margin-bottom: 10px;
+       }
+
+
+       .profile-card .profile-pic {
+           width: 40px;
+           height: 40px;
+           border-radius: 50%;
+           object-fit: cover;
+       }
+
+
+       .profile-card .profile-name {
+           font-weight: 600;
+           font-size: 14px;
+       }
+
+
+       .profile-card .section-title {
+           font-size: 12px;
+           font-weight: 600;
+           color: #555;
+           margin-top: 10px;
+           margin-bottom: 4px;
+           padding-left: 5px;
+           text-transform: uppercase;
+       }
+
+
+       .profile-card a {
+           display: block;
+           padding: 6px 10px 6px 20px;
+           text-decoration: none;
+           color: #222;
+           border-radius: 6px;
+           transition: background 0.2s;
+           font-size: 13px;
+       }
+
+
+       .profile-card a:hover {
+           background-color: #f1f1f1;
+       }
+
+
+       #profileBtn:hover {
+           transform: scale(1.05);
+           box-shadow: 0 8px 18px rgba(13, 56, 95, 0.25);
+       }
+
+
+       #profileBtn {
+           transition: all 0.2s ease;
+       }
+
+
+       /* Footer */
+       footer {
+           background: linear-gradient(to bottom, #145da0, #07223a);
+           color: #fff;
+           padding: 18px 40px;
+           display: flex;
+           justify-content: space-between;
+           font-size: 14px;
+       }
+
+
+       footer .leftFooter {
+           text-align: left;
+       }
+
+
+       footer .rightFooter {
+           text-align: right;
+       }
+
+
+       /* NEW: Flex container for mini card + map placeholder */
+       .card-container {
+           display: flex;
+           gap: 35px;
+           /* space between mini card and map */
+           margin-left: 35px;
+           /* align with mini card */
+           margin-top: 35px;
+       }
+
+
+       .map-placeholder {
+           flex: 1;
+           /* fill remaining space */
+           height: 600px;
+           background-color: #f2f2f2;
+           border: 1px solid #ccc;
+           border-radius: 14px;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           color: #888;
+           font-size: 18px;
+           margin-right: 35px;
+           /* same as mini card margin-left */
+           /* width: 20px; <-- REMOVE this line */
+       }
+
+
+       .profile-card .profile-info div {
+           display: flex;
+           flex-direction: column;
+           /* stack name and muni vertically */
+           gap: 2px;
+           /* bawasan gap sa pagitan nila */
+       }
+
+
+       .profile-card .profile-name {
+           margin: 0;
+           /* remove default margin */
+           font-weight: 600;
+           font-size: 14px;
+       }
+
+
+       .profile-card .profile-muni {
+           margin: 0;
+           /* remove default margin */
+           font-size: 12px;
+           color: #555;
+       }
+   </style>
+
+
+
+
+</head>
+
+
+<body>
+
+
+   <!-- HEADER & NAVBAR -->
+   <header class="topbar">
+       <div class="topbar-left">
+           <form id="municipalitySearchForm">
+               <input type="text" name="municipality" id="municipalitySearch" placeholder="Search Municipality...">
+               <button type="submit">Search</button>
+           </form>
+
+
+           <ul id="suggestions" style="position:absolute; background:#fff; list-style:none; margin:0; padding:0;
+          border:1px solid #ccc; border-radius:6px; display:none; z-index:1000;">
+           </ul>
+       </div>
+
+
+       <nav class="nav">
+           <button class="nav-btn {% if active_page == 'home' %}active{% endif %}"
+               onclick="location.href='/guestHome'">Home</button>
+           <button class="nav-btn {% if active_page == 'analytics' %}active{% endif %}"
+               onclick="location.href='/guestAnalytics'">Analytics</button>
+           <button class="nav-btn {% if active_page == 'guestMap' %}active{% endif %}"
+               onclick="location.href='/guestMap'">Map</button>
+           <button class="nav-btn {% if active_page == 'Exit' %}active{% endif %}"
+               onclick="location.href='/login'">Exit</button>
+       </nav>
+   </header>
+
+
+   <!-- MAIN CONTENT -->
+   <main>
+       <div class="card-container">
+           <!-- LEFT PANEL MINI CARD (Search Result) -->
+           <div class="card mini" id="userMuniCard">
+               <div class="card-image">
+                   <img src="{{ url_for('static', filename='cardMap.jpg') }}" alt="Map Preview">
+               </div>
+               <div class="card-content">
+                   <div class="card-header-row">
+                       <!-- Left side: Municipality + light -->
+                       <div class="muni-left">
+                           <h3 id="muniName">{{ municipality }}</h3>
+                           <div id="crimeHeatIndicator"
+                               class="light-indicator
+   {% if total_cases <= 50 %}light-green{% elif total_cases <= 150 %}light-yellow{% elif total_cases > 150 %}light-red{% else %}light-gray{% endif %}">
+                           </div>
+
+
+                       </div>
+
+
+                       <!-- Right side: Year dropdown -->
+                       <input type="hidden" id="yearMunicipality" value="{{ municipality }}">
+                       <select name="year" id="yearDropdown">
+                           {% for y in years %}
+                           <option value="{{ y }}" {% if y==year %}selected{% endif %}>{{ y }}</option>
+                           {% endfor %}
+                       </select>
+
+
+                   </div>
+
+
+                   <hr class="divider">
+
+
+                   <div>
+                       <strong>Total Cases:</strong>
+                       <p id="totalCases" style="color:#ff0000; font-size:20px">{{ total_cases }} Cases</p>
+                   </div>
+
+
+                   <hr class="divider">
+                   <div>
+                       <strong>Most Common Crime:</strong>
+                       <p id="mostCommonCrime" style="font-weight:600">{{ top_crime }}</p>
+                       <p id="mostCommonCrimeCases" style="color:#ff0000; font-size:20px;">{{ top_crime_cases }} Cases
+                       </p>
+                   </div>
+
+
+                   <hr class="divider">
+                   <div>
+                       <strong>Monthly Peak:</strong>
+                       <p id="peakMonth" style="font-weight:600">{{ peak_month }} </p>
+                       <p id="peakMonthCases" style="color:#ff0000; font-size:20px">{{ peak_month_cases }} Cases</p>
+                   </div>
+               </div>
+           </div>
+
+
+           <!-- RIGHT PANEL MAP PLACEHOLDER -->
+           <div class="map-placeholder">
+               Map will be here soon
+           </div>
+       </div>
+   </main>
+
+
+   <!-- FOOTER -->
+   <footer class="footer">
+       <div class="leftFooter">
+           © 2025 SafeLens, All Rights Reserved | Last Updated: November 18, 2025
+       </div>
+   </footer>
+
+
+   <!-- SCRIPT TO FETCH SEARCH DATA AND PROFILE TOGGLE -->
+   <script>
+       document.addEventListener("DOMContentLoaded", function () {
+           const searchInput = document.getElementById('municipalitySearch');
+           const searchForm = document.getElementById('municipalitySearchForm');
+           const yearDropdown = document.getElementById('yearDropdown');
+           const hiddenMuni = document.getElementById('yearMunicipality');
+           const suggestionsList = document.getElementById('suggestions');
+
+
+           // ------------------ MINI CARD UPDATE ------------------
+           function updateMiniCard(data) {
+               document.getElementById('muniName').textContent = data.municipality.name || '-';
+               document.getElementById('totalCases').textContent = (data.municipality.cases || 0) + ' Cases';
+               document.getElementById('mostCommonCrime').textContent = data.crime?.type || '-';
+               document.getElementById('mostCommonCrimeCases').textContent = data.crime?.cases || 0;
+               document.getElementById('peakMonth').textContent = data.peak_month?.name || '-';
+               document.getElementById('peakMonthCases').textContent = data.peak_month?.cases || 0;
+
+
+               hiddenMuni.value = data.municipality.name;
+
+
+               const heat = document.getElementById('crimeHeatIndicator');
+               heat.className = 'light-indicator';
+               const cases = data.municipality.cases || 0;
+               if (cases === 0) heat.classList.add('light-gray');
+               else if (cases <= 50) heat.classList.add('light-green');
+               else if (cases <= 150) heat.classList.add('light-yellow');
+               else heat.classList.add('light-red');
+           }
+
+
+           // ------------------ AUTOCOMPLETE ------------------
+           searchInput.addEventListener('input', async () => {
+               const q = searchInput.value.trim();
+               if (!q) {
+                   suggestionsList.style.display = 'none';
+                   return;
+               }
+
+
+               try {
+                   const res = await fetch(`/municipality_suggestions?term=${encodeURIComponent(q)}`);
+                   const suggestions = await res.json();
+
+
+                   suggestionsList.innerHTML = '';
+                   suggestions.forEach(item => {
+                       const li = document.createElement('li');
+                       li.textContent = item;
+                       li.style.padding = "6px 10px";
+                       li.style.cursor = "pointer";
+                       li.addEventListener('click', () => {
+                           searchInput.value = item;
+                           suggestionsList.style.display = 'none';
+                       });
+                       suggestionsList.appendChild(li);
+                   });
+
+
+                   suggestionsList.style.display = suggestions.length ? 'block' : 'none';
+               } catch (err) {
+                   console.error(err);
+                   suggestionsList.style.display = 'none';
+               }
+           });
+
+
+           // ------------------ SEARCH FORM ------------------
+           searchForm.addEventListener('submit', async (e) => {
+               e.preventDefault();
+               const muni = searchInput.value.trim();
+               const year = yearDropdown.value;
+               if (!muni) return;
+
+
+               suggestionsList.style.display = 'none';
+
+
+               try {
+                   const res = await fetch(`/searchMunicipality?name=${encodeURIComponent(muni)}&year=${year}`);
+                   const data = await res.json();
+                   if (!data.municipality) {
+                       alert("Municipality not found");
+                       return;
+                   }
+                   updateMiniCard(data);
+               } catch (err) {
+                   console.error(err);
+               }
+           });
+
+
+           // ------------------ YEAR CHANGE ------------------
+           yearDropdown.addEventListener('change', async () => {
+               const muni = hiddenMuni.value;
+               const year = yearDropdown.value;
+               if (!muni) return;
+
+
+               try {
+                   const res = await fetch(`/searchMunicipality?name=${encodeURIComponent(muni)}&year=${year}`);
+                   const data = await res.json();
+                   if (!data.municipality) {
+                       alert("No data for this year");
+                       return;
+                   }
+                   updateMiniCard(data);
+               } catch (err) {
+                   console.error(err);
+               }
+           });
+
+
+           // ------------------ LOAD DEFAULT MUNICIPALITY (Guest) ------------------
+           (async function loadDefaultMuni() {
+               const defaultMuni = "Dagupan"; // top municipality for guest
+               const defaultYear = yearDropdown.value || 2025;
+               hiddenMuni.value = defaultMuni;
+               searchInput.value = defaultMuni;
+
+
+               try {
+                   const res = await fetch(`/searchMunicipality?name=${encodeURIComponent(defaultMuni)}&year=${defaultYear}`);
+                   const data = await res.json();
+                   if (data.municipality) updateMiniCard(data);
+               } catch (err) {
+                   console.error(err);
+               }
+           })();
+
+
+           // ------------------ PROFILE CARD TOGGLE ------------------
+           const profileBtn = document.getElementById('profileBtn');
+           const profileCard = document.getElementById('profileCard');
+
+
+           profileBtn.addEventListener('click', () => {
+               profileCard.classList.toggle('show');
+           });
+
+
+           document.addEventListener('click', (e) => {
+               if (!profileCard.contains(e.target) && !profileBtn.contains(e.target)) {
+                   profileCard.classList.remove('show');
+               }
+           });
+       });
+   </script>
+
+
+</body>
+
+
+</html>
+
+
+

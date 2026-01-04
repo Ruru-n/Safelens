@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+   <meta charset="UTF-8">
+   <title>All Municipalities - SafeLens</title>
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+
+<body>
+   <h2>All Municipalities Crime Cases ({{ year }})</h2>
+   <canvas id="allMuniChart" height="400"
+       data-labels='{{ municipalities | map(attribute=0) | list | tojson | default("[]") }}'
+       data-values='{{ municipalities | map(attribute=1) | list | tojson | default("[0]") }}'>
+   </canvas>
+
+
+   <script>
+       const chartEl = document.getElementById('allMuniChart');
+       const allMuniLabels = JSON.parse(chartEl.dataset.labels);
+       const allMuniData = JSON.parse(chartEl.dataset.values);
+       const ctx = chartEl.getContext('2d');
+
+
+       new Chart(ctx, {
+           type: 'bar',
+           data: {
+               labels: allMuniLabels,
+               datasets: [{
+                   label: 'Cases',
+                   data: allMuniData,
+                   backgroundColor: 'rgba(20, 93, 160, 0.7)',
+                   borderColor: '#145da0',
+                   borderWidth: 1
+               }]
+           },
+           options: {
+               indexAxis: 'y', // horizontal
+               responsive: true,
+               plugins: { legend: { display: false } },
+               scales: { x: { beginAtZero: true } }
+           }
+       });
+   </script>
+
+
+
+
+
+
+
+
+
+
+</body>
+
+
+</html>
+

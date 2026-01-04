@@ -1,0 +1,78 @@
+Try AI directly in your favorite apps … Use Gemini to generate drafts and refine content, plus get Gemini Pro with access to Google's next-gen AI for ₱1,100 ₱360 for 3 months
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container">
+    <h2> < Edit profile </h2>
+
+    <form method="POST" enctype="multipart/form-data">
+        <div class="profile-pic">
+            <img id="preview"
+             src="{{ url_for('static', filename='uploads/' + (user.profile_pic or 'default.png')) }}"
+             alt="Profile Picture">
+
+        <label class="change-pic">
+             Change profile picture
+            <input type="file" name="profile_pic" accept="image/*" onchange="previewImage(event)" hidden>
+        </label>
+        </div>
+
+        <div class="grid">
+            <div>
+                <label>Last Name</label>
+                <input type="text" name="last_name" value="{{ user.last_name }}">
+            </div>
+
+            <div>
+                <label>First Name</label>
+                <input type="text" name="first_name" value="{{ user.first_name }}">
+            </div>
+
+            <div>
+                <label>M.I</label>
+                <input type="text" name="middle_initial" value="{{ user.middle_initial }}">
+            </div>
+
+            <div>
+                <label>Email</label>
+                <input type="email" name="email" value="{{ user.email }}">
+            </div>
+
+            <div>
+                <label>Phone number</label>
+                <input type="text" name="phone" value="{{ user.phone }}">
+            </div>
+
+            <div class="full-width">
+                <label>Municipality / City</label>
+                <input type="text" name="city" value="{{ user.city }}">
+            </div>
+
+        </div>
+
+        <div class="buttons">
+            <a href="/" class="cancel">Cancel</a>
+            <button type="submit" class="save">Save</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>
+
+
+<script>
+function previewImage(event) {
+    const reader = new FileReader();
+    reader.onload = function () {
+        const img = document.getElementById('preview');
+        img.src = reader.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+}
+</script>

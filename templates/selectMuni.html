@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Safelens Select Page</title>
+
+
+   <style>
+       body {
+           margin: 0;
+           font-family: "Segoe UI", Arial, sans-serif;
+           height: 100vh;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           background: linear-gradient(to bottom, #145DA0, #07223A);
+           position: relative;
+           overflow: hidden;
+       }
+
+
+       /* White curved shape in the corner */
+       .corner-curve {
+           position: absolute;
+           bottom: 0;
+           right: 0px;
+           width: 50%;
+           height: 460px;
+           /* <<< control size ng curve */
+           overflow: hidden;
+           pointer-events: none;
+           z-index: -1;
+           /* SEND TO BACK */
+       }
+
+
+       .curve {
+           width: 100%;
+           height: auto;
+           /* keep original aspect ratio */
+           object-fit: contain;
+           /* no crop */
+           z-index: 2;
+           /* BRING TO FRONT */
+           position: relative;
+           /* REQUIRED para gumana ang z-index */
+       }
+
+
+       .logo {
+           position: absolute;
+           /* para independent sa flow ng card */
+           top: 20px;
+           /* distance from top ng card/body */
+           left: 50%;
+           /* center horizontally */
+           transform: translateX(-50%);
+           /* perfect horizontal center */
+           z-index: 5;
+           /* siguraduhin nasa ibabaw siya */
+       }
+
+
+       .logo img {
+           margin-left: 805px;
+           margin-top: 35px;
+           width: 130px;
+           /* paliitin ang size */
+           height: auto;
+           /* maintain aspect ratio */
+       }
+
+
+       /* CARD */
+       .card {
+           width: 75%;
+           height: 592px;
+           max-width: 900px;
+           background: white;
+           border-radius: 40px;
+           padding: 50px;
+           display: flex;
+           align-items: center;
+           gap: 40px;
+           box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+       }
+
+
+       /* POLICE IMAGE */
+       .police {
+           margin-top: -100px;
+           margin-left: -20px;
+           width: 270px;
+           height: auto;
+       }
+
+
+       /* RIGHT SIDE CONTENT */
+       .right-section {
+           margin-left: -50px;
+           flex: 1;
+           display: flex;
+           flex-direction: column;
+           gap: 25px;
+           position: relative;
+           /* important para ang absolute children ay relative dito */
+       }
+
+
+       /* Bubbles */
+       .bubbles {
+           position: absolute;
+           /* fix bubbles independently */
+           top: -30px;
+           /* adjust vertical position */
+           left: -20px;
+           /* adjust horizontal position */
+           display: flex;
+           gap: 7px;
+           transform: rotate(30deg);
+           /* diagonal */
+       }
+
+
+       .bubble {
+           background: #1F5A9E;
+           border-radius: 50%;
+       }
+
+
+       .b1 {
+           width: 18px;
+           height: 18px;
+       }
+
+
+       .b2 {
+           width: 27px;
+           height: 27px;
+       }
+
+
+       .b3 {
+           width: 37px;
+           height: 37px;
+       }
+
+
+
+
+       /* Blue question box */
+       .question-box {
+           background: #1F5A9E;
+           color: white;
+           padding: 20px 30px;
+           border-radius: 10px;
+           font-size: 22px;
+           font-weight: 600;
+       }
+
+
+       /* Dropdown */
+       select {
+           width: 100%;
+           padding: 18px;
+           padding-right: 40px;
+           /* mas malayo ang arrow mula sa text */
+           border-radius: 10px;
+           border: 2px solid #1F5A9E;
+           font-size: 18px;
+           outline: none;
+
+
+           /* Remove default arrow */
+           -webkit-appearance: none;
+           -moz-appearance: none;
+           appearance: none;
+
+
+           /* Custom arrow */
+           background-image: url("{{ url_for('static', filename='dropdown.png') }}");
+           background-repeat: no-repeat;
+           background-position: right 15px center;
+           /* adjust arrow position */
+           background-size: 20px;
+           /* size of arrow */
+       }
+
+
+       /* Mobile */
+       @media (max-width: 780px) {
+           .card {
+               flex-direction: column;
+               width: 90%;
+               text-align: center;
+           }
+       }
+
+
+       .next-btn {
+           position: absolute;
+           bottom: 80px;
+           right: 21%;
+           transform: translateX(50%);
+           width: 55px;
+           height: 55px;
+           background: #083A72;
+           border-radius: 50%;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           cursor: pointer;
+           box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+       }
+
+
+       .next-btn span {
+           color: #fff;
+           font-size: 25px;
+           font-weight: bold;
+       }
+   </style>
+</head>
+
+
+<body>
+
+
+   <div class="card">
+
+
+       <!-- LEFT POLICE IMAGE -->
+       <img src="{{url_for('static', filename = 'police.png')}}" class="police" alt="police">
+
+
+       <!-- RIGHT SIDE -->
+       <div class="right-section">
+
+
+           <!-- BUBBLES -->
+           <div class="bubbles">
+               <div class="bubble b1"></div>
+               <div class="bubble b2"></div>
+               <div class="bubble b3"></div>
+           </div>
+
+
+           <!-- QUESTION BOX -->
+           <div class="question-box">
+               Where in Pangasinan are you from?
+           </div>
+
+
+           <!-- DROPDOWN -->
+           <select name="municipality" id="municipality" required>
+               <option>Agno</option>
+               <option>Aguilar</option>
+               <option>Alaminos City</option>
+               <option>Anda</option>
+               <option>Asingan</option>
+               <option>Balungao</option>
+               <option>Bani</option>
+               <option>Basista</option>
+               <option>Bautista</option>
+               <option>Bayambang</option>
+               <option>Binalonan</option>
+               <option>Binmaley</option>
+               <option>Bolinao</option>
+               <option>Bugallon</option>
+               <option>Burgos</option>
+               <option>Calasiao</option>
+               <option>Dagupan City</option>
+               <option>Dasol</option>
+               <option>Infanta</option>
+               <option>Labrador</option>
+               <option>Laoac</option>
+               <option>Lingayen</option>
+               <option>Mabini</option>
+               <option>Malasiqui</option>
+               <option>Manaoag</option>
+               <option>Mangaldan</option>
+               <option>Mangatarem</option>
+               <option>Mapandan</option>
+               <option>Natividad</option>
+               <option>Pozorrubio</option>
+               <option>Rosales</option>
+               <option>San Carlos City</option>
+               <option>San Fabian</option>
+               <option>San Jacinto</option>
+               <option>San Manuel</option>
+               <option>San Nicolas</option>
+               <option>San Quintin</option>
+               <option>Santa Barbara</option>
+               <option>Santa Maria</option>
+               <option>Santo Tomas</option>
+               <option>Sison</option>
+               <option>Sual</option>
+               <option>Tayug</option>
+               <option>Umingan</option>
+               <option>Urbiztondo</option>
+               <option>Urdaneta City</option>
+               <option>Villasis</option>
+               <option></option>
+           </select>
+
+
+       </div>
+
+
+       <div class="corner-curve">
+           <img src="{{ url_for('static', filename='curve.png') }}" class="curve">
+       </div>
+
+
+       <div class="logo">
+           <img src="{{url_for('static', filename='offLogo.png')}}" class="offLogo">
+       </div>
+
+
+       <div id="nextBtn" class="next-btn">
+           <span>›</span>
+       </div>
+
+
+   </div>
+
+
+   <!-- CURVE IMAGE -->
+   <div class="corner-curve">
+       <img src="curve.png">
+   </div>
+
+
+   <script>
+       document.getElementById("nextBtn").addEventListener("click", function () {
+           const municipality = document.getElementById("municipality").value;
+
+
+           if (!municipality) {
+               alert("Please select your municipality!");
+               return;
+           }
+
+
+           fetch("/save_municipality", {
+               method: "POST",
+               headers: {
+                   "Content-Type": "application/json"
+               },
+               body: JSON.stringify({ municipality: municipality })
+           })
+               .then(response => response.json())
+               .then(data => {
+                   if (data.success) {
+                       window.location.href = "/firstWelcome";  // redirect after saving
+                   } else {
+                       alert("Error saving municipality: " + (data.message || "Unknown error"));
+                   }
+               });
+       });
+
+
+
+
+   </script>
+
+
+</body>
+
+
+</html>
+

@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+   <meta charset="UTF-8" />
+   <title>SafeLens | Analytics</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+
+   <style>
+       :root {
+           --bg: #f5f8fb;
+           --card: #ffffff;
+           --accent: #0e4380;
+           /* nude blue */
+           --accent-soft: #e9f0f7;
+           /* soft nude blue */
+           --shadow: 0 6px 14px rgba(13, 30, 60, 0.08);
+       }
+
+
+       * {
+           box-sizing: border-box;
+       }
+
+
+       body {
+           margin: 0;
+           font-family: "Poppins", Arial, sans-serif;
+           background: var(--bg);
+           color: #222;
+       }
+
+
+       /* Topbar */
+       .topbar {
+           display: flex;
+           justify-content: space-between;
+           align-items: center;
+           padding: 18px 36px;
+           background: #fff;
+           box-shadow: 0 2px 10px rgba(0, 0, 0, .05);
+       }
+
+
+       .brand {
+           display: flex;
+           align-items: center;
+           gap: 12px;
+       }
+
+
+       .brand .offLogo {
+           height: 70px;
+           width: 100px;
+           margin-top: -10px;
+       }
+
+
+       .nav .nav-btn {
+           margin-left: 8px;
+           padding: 12px 35px;
+           border-radius: 6px;
+           border: none;
+           background: #fff;
+           box-shadow: var(--shadow);
+           cursor: pointer;
+       }
+
+
+       .nav .nav-btn.active {
+           background: linear-gradient(to bottom, #145da0, #07223a);
+           color: #fff;
+           box-shadow: 0 6px 14px rgba(8, 52, 91, 0.35);
+       }
+
+
+       /* Layout */
+       .container {
+           padding: 15px 50px;
+           margin-top: 5px;
+       }
+
+
+       .main-layout {
+           display: grid;
+           grid-template-columns: 35% 65%;
+           grid-template-rows: auto 1fr;
+           gap: 24px;
+       }
+
+
+       /* Cards */
+       .card {
+           background: var(--card);
+           border-radius: 14px;
+           padding: 20px;
+           box-shadow: var(--shadow);
+           position: relative;
+       }
+
+
+       .card.table-card {
+           height: 480px;
+           /* palitan lang kung gusto mo mas mataas o mas mababa */
+           overflow-y: auto;
+           /* para may scroll kung lagpas sa height */
+       }
+
+
+
+
+       .card.mini {
+           min-height: 125px;
+           /* o kahit ano ang gusto mo */
+           display: flex;
+           flex-direction: column;
+           justify-content: center;
+           /* para vertical center yung content */
+       }
+
+
+
+
+       .card h3 {
+           margin: 0;
+           font-size: 17px;
+           color: #111;
+           font-weight: 600;
+           margin-bottom: 6px;
+       }
+
+
+       .card h2 {
+           margin-top: 10px;
+           font-size: 30px;
+           color: #111;
+           font-weight: 700;
+           margin: 6px 0 4px 0;
+           /* top | right | bottom | left */
+           line-height: 1.2;
+       }
+
+
+       .card p {
+           font-size: 16px;
+           /* palaki */
+           font-weight: 500;
+           margin: 0;
+           line-height: 1.3;
+       }
+
+
+       .view-btn {
+           position: absolute;
+           top: 16px;
+           right: 16px;
+           background: transparent;
+           border: none;
+           color: var(--accent);
+           cursor: pointer;
+           font-weight: 500;
+       }
+
+
+       /* Left Panel */
+       .left-panel {
+           display: flex;
+           flex-direction: column;
+           gap: 18px;
+           height: 100%;
+       }
+
+
+       .mini-cards {
+           display: grid;
+           grid-template-rows: auto 1fr 1fr;
+           gap: 14px;
+           height: 100%;
+       }
+
+
+       .mini {
+           padding: 12px;
+       }
+
+
+       .chart-card {
+           flex: 1;
+           display: flex;
+           flex-direction: column;
+           height: 234px;
+       }
+
+
+       .chart-card>div {
+           flex: 1;
+       }
+
+
+       .chart-card canvas {
+           width: 100% !important;
+           height: 100% !important;
+       }
+
+
+       select.year-dropdown {
+           margin-top: 10px;
+           padding: 8px;
+           border-radius: 6px;
+           width: 100%;
+           font-weight: 500;
+           background-color: var(--accent);
+           color: #fff;
+           border: none;
+           cursor: pointer;
+       }
+
+
+       /* Right Panel */
+       .right-panel {
+           display: flex;
+           flex-direction: column;
+           gap: 15px;
+           height: 100%;
+       }
+
+
+       /* Stats cards */
+       .stats-right {
+           display: flex;
+           gap: 18px;
+       }
+
+
+       .stats-right .card {
+           flex: 1;
+       }
+
+
+       /* ===================== */
+       /* TABLE (NUDE BLUE)     */
+       /* ===================== */
+
+
+       table {
+           width: 100%;
+           border-collapse: collapse;
+           margin-top: 16px;
+           border-radius: 10px;
+           overflow: hidden;
+           table-layout: fixed;
+
+
+       }
+
+
+       thead th {
+           background: #0e4380;
+           color: #fff;
+           padding: 16px;
+           font-size: 14px;
+           font-weight: 600;
+           letter-spacing: 0.4px;
+           text-align: center;
+           width: 33.33%;
+       }
+
+
+       tbody td {
+           padding: 14px;
+           font-size: 14px;
+           color: #333;
+           border-bottom: 1px solid #eee;
+           text-align: center;
+           width: 33.33%;
+       }
+
+
+       tbody tr:hover {
+           background: var(--accent-soft);
+       }
+
+
+       th:last-child,
+       td:last-child {
+           text-align: center;
+           font-weight: 600;
+       }
+
+
+       /* Footer */
+       footer {
+           margin-top: 8px;
+           background: linear-gradient(to bottom, #145da0, #07223a);
+           color: #fff;
+           padding: 18px 40px;
+           display: flex;
+           justify-content: space-between;
+           font-size: 14px;
+       }
+
+
+       .footer .leftFooter {
+           text-align: left;
+       }
+
+
+       .footer .rightFooter {
+           text-align: right;
+       }
+
+
+       .chart-card canvas {
+           width: 100% !important;
+           height: 180px !important;
+       }
+
+
+       .nav .nav-btn:hover {
+           transform: translateY(-1px);
+           box-shadow: 0 8px 18px rgba(13, 56, 95, 0.25);
+       }
+   </style>
+</head>
+
+
+<body>
+
+
+   <!-- HEADER -->
+   <header class="topbar">
+       <div class="brand">
+           <img src="{{ url_for('static', filename='offLogo.png') }}" alt="SafeLens" class="offLogo" />
+       </div>
+       <nav class="nav">
+           <button class="nav-btn {% if active_page == 'home' %}active{% endif %}"
+               onclick="location.href='/guestHome'">Home</button>
+           <button class="nav-btn {% if active_page == 'analytics' %}active{% endif %}"
+               onclick="location.href='/guestAnalytics'">Analytics</button>
+           <button class="nav-btn {% if active_page == 'guestMap' %}active{% endif %}"
+               onclick="location.href='/guestMap'">Map</button>
+           <button class="nav-btn {% if active_page == 'guestMap' %}active{% endif %}"
+               onclick="location.href='/login'">Exit</button>
+
+
+   </header>
+
+
+   <div class="container">
+       <div class="main-layout">
+
+
+           <!-- LEFT PANEL -->
+           <div class="left-panel" style="grid-row: 1 / span 2;">
+               <div class="mini-cards">
+
+
+                   <!-- YEAR SELECT CARD -->
+                   <div class="card mini">
+                       <h3>Crime Analytics</h3>
+                       <select class="year-dropdown" onchange="location.href='?year=' + this.value">
+                           {% for y in years %}
+                           <option value="{{ y }}" {% if y==selected_year %}selected{% endif %}>
+                               {{ y }}
+                           </option>
+                           {% endfor %}
+                       </select>
+                       <p style="margin-top:6px;font-size:12px;color:#666;">
+                           Quick view of crime activity and hotspots
+                       </p>
+                   </div>
+
+
+                   <!-- 🆕 TOP MUNICIPALITY CHART CARD (NASA TAAS) -->
+                   <!-- 🆕 TOP MUNICIPALITY PLACEHOLDER CARD -->
+                   <div class="card chart-card">
+                       <h3>Municipality with Highest Cases</h3>
+
+
+                       <canvas id="municipalityChart" height="180" data-labels='{{ municipality_names | tojson }}'
+                           data-values='{{ municipality_cases | tojson }}'>
+                       </canvas>
+                       <button class="view-btn"
+                           onclick="location.href='/allMunicipalitiesGuest?year={{ selected_year }}'">View All</button>
+                   </div>
+
+
+
+
+                   <!-- 📉 CRIME TREND CHART (NASA BABA NA) -->
+                   <div class="card chart-card">
+                       <h3>Crime Trend Analysis</h3>
+                       <canvas id="crimeTrendChart" height="180" data-labels='{{ trend_months | tojson }}'
+                           data-values='{{ trend_cases | tojson }}'>
+                       </canvas>
+                       <button class="view-btn"
+                           onclick="location.href='/allCrimeTrendGuest?year={{ selected_year }}'">View
+                           All</button>
+                   </div>
+
+
+               </div>
+
+
+
+
+           </div>
+
+
+           <!-- RIGHT PANEL -->
+           <div class="right-panel" style="grid-row: 1 / span 2;">
+
+
+               <div class="stats-right">
+                   <div class="card">
+                       <h3>Total Cases</h3>
+                       <h2 style="font-size:24px; font-weight:400; color:#ff0000;">
+                           {{ total_cases }}</h2>
+                   </div>
+
+
+                   <div class="card">
+                       <h3>Top Municipality</h3>
+                       <h2 style="font-size:24px;color:#111;">
+                           {{ top_municipality }}</h2>
+                       <p style="font-size:20px;color:#ff0000;">
+                           {{ top_municipality_cases }} Cases
+                       </p>
+                   </div>
+
+
+                   <div class="card">
+                       <h3>Common Crime</h3>
+                       <h2 style="font-size:24px;color:#111;">
+                           {{ common_crime }}</h2>
+                       <p style="font-size:20px;color:#ff0000;">
+                           {{ common_crime_cases }} Cases
+                       </p>
+                   </div>
+
+
+                   <div class="card">
+                       <h3>Monthly Peak</h3>
+                       <h2 style="font-size:24px;color:#111;">
+                           {{ peak_month }}</h2>
+                       <p style="font-size:20px;color:#ff0000;">
+                           {{ peak_month_cases }} Cases
+                       </p>
+                   </div>
+               </div>
+
+
+               <!-- TABLE CARD -->
+               <div class="card table-card">
+                   <h3>Top Municipality per Crime Type</h3>
+
+
+
+
+                   <table>
+                       <thead>
+                           <tr>
+                               <th>Crime Type</th>
+                               <th>Municipality</th>
+                               <th>Cases</th>
+                           </tr>
+                       </thead>
+                       <tbody>
+                           {% for row in table_data %}
+                           <tr>
+                               <td>{{ row.crime }}</td>
+                               <td>{{ row.municipality }}</td>
+                               <td>{{ row.cases }}</td>
+                           </tr>
+                           {% endfor %}
+                       </tbody>
+                   </table>
+               </div>
+
+
+           </div>
+       </div>
+   </div>
+
+
+   <!-- FOOTER -->
+   <footer class="footer">
+       <div class="leftFooter">
+           © 2025 SafeLens, All Rights Reserved | Last Updated: November 18, 2025
+       </div>
+   </footer>
+
+
+   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+   <script>
+       const chartEl = document.getElementById('crimeTrendChart');
+
+
+       const trendLabels = JSON.parse(chartEl.dataset.labels || '["No Data"]');
+       const trendData = JSON.parse(chartEl.dataset.values || '[0]');
+
+
+       const ctx = chartEl.getContext('2d');
+
+
+       new Chart(ctx, {
+           type: 'line',
+           data: {
+               labels: trendLabels,
+               datasets: [{
+                   label: 'Number of Crimes',
+                   data: trendData,
+                   borderColor: '#145da0',
+                   backgroundColor: 'rgba(20, 93, 160, 0.2)',
+                   fill: true,
+                   tension: 0.3
+               }]
+           },
+           options: {
+               responsive: true,
+               plugins: {
+                   legend: {
+                       display: true
+                   }
+               },
+               scales: {
+                   y: {
+                       beginAtZero: true
+                   }
+               }
+           }
+       });
+   </script>
+
+
+   <script>
+       const muniChartEl = document.getElementById('municipalityChart');
+       let muniLabels = JSON.parse(muniChartEl.dataset.labels || '["No Data"]');
+       let muniData = JSON.parse(muniChartEl.dataset.values || '[0]');
+       const allLabels = JSON.parse(muniChartEl.dataset.allLabels || '["No Data"]');
+       const allData = JSON.parse(muniChartEl.dataset.allValues || '[0]');
+
+
+       const muniCtx = muniChartEl.getContext('2d');
+
+
+       let municipalityChart = new Chart(muniCtx, {
+           type: 'bar',
+           data: {
+               labels: muniLabels,
+               datasets: [{
+                   label: 'Number of Cases',
+                   data: muniData,
+                   backgroundColor: 'rgba(20, 93, 160, 0.7)',
+                   borderColor: '#145da0',
+                   borderWidth: 1
+               }]
+           },
+           options: {
+               indexAxis: 'y', // 🔹 Gawin horizontal
+               responsive: true,
+               plugins: { legend: { display: false } },
+               scales: { x: { beginAtZero: true } } // x-axis since horizontal
+           }
+       });
+
+
+
+
+       // 🔹 Function to show all municipalities
+       function viewAllMunicipalities() {
+           municipalityChart.data.labels = allLabels;
+           municipalityChart.data.datasets[0].data = allData;
+           municipalityChart.update();
+       }
+   </script>
+
+
+
+
+
+
+</body>
+
+
+</html>
